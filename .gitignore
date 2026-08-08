@@ -2,3 +2,6 @@
 .playwright-mcp/
 *.png
 __pycache__/
+.env
+.env.*
+!.env.example

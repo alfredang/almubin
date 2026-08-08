@@ -10,7 +10,7 @@ E = html.escape
 
 NAV = """<nav>
   <div class="wrap">
-    <div class="logo"><a href="{root}index.html">🍽️ Al Mubin <span>Training</span></a></div>
+    <a class="logo" href="{root}index.html"><span class="logo-icon">AM</span><span class="logo-text"><span class="logo-title">Al Mubin FC Training</span><span class="logo-subtitle">Learn · Grow · Succeed</span></span></a>
     <ul class="nav-links">
       <li><a href="{root}index.html#courses">Courses</a></li>
       <li><a href="{root}index.html#why">Why Us</a></li>
@@ -43,7 +43,7 @@ def footer(root=""):
     return """<footer>
   <div class="wrap footer-top">
     <div class="footer-brand">
-      <div class="logo">🍽️ Al Mubin <span>Training</span></div>
+      <div class="logo"><span class="logo-icon">AM</span><span class="logo-text"><span class="logo-title">Al Mubin FC Training</span><span class="logo-subtitle">Learn · Grow · Succeed</span></span></div>
       <p>In-house food safety, halal handling, workplace safety and kitchen operations
          training for F&amp;B teams across Singapore — delivered at your premises.</p>
       <p class="uen"><b>Al Mubin Food Corner Pte. Ltd.</b><br>UEN 202216797E</p>
@@ -121,7 +121,7 @@ COURSE_PAGE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} ({code}) — Al Mubin Training</title>
+<title>{title} ({code}) — Al Mubin FC Training</title>
 <meta name="description" content="{lede}">
 <link rel="stylesheet" href="../css/style.css">
 <style>.course-hero::before{{background-image:url('{photo}')}}</style>
@@ -293,7 +293,7 @@ INDEX = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Al Mubin Food Corner — Workplace Training</title>
+<title>Al Mubin FC Training — F&amp;B Workplace Training Singapore</title>
 <meta name="description" content="In-house halal handling, workplace safety and kitchen operations training for F&B teams in Singapore. Al Mubin Food Corner Pte. Ltd.">
 <link rel="stylesheet" href="css/style.css">
 </head>
