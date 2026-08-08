@@ -77,6 +77,9 @@ def footer(root=""):
     <div>© <span id="yr"></span> Al Mubin Food Corner Pte. Ltd. All rights reserved.</div>
     <div>Training delivered in English &amp; Malay · On-site across Singapore</div>
   </div>
+  <div class="wrap">
+    <p class="powered-by">Powered by <a href="https://www.tertiaryinfotech.com/" target="_blank" rel="noopener">Tertiary Infotech Academy Pte Ltd</a></p>
+  </div>
 </footer>
 
 <a class="wa-float" href="https://wa.me/{whatsapp}?text={wa_text}"
