@@ -498,3 +498,64 @@ footer .footer-col a:hover{color:var(--amber)}
 /* Logo must never inherit link underline/colour */
 .logo,.logo:hover,.logo a,.logo a:hover{text-decoration:none;color:inherit}
 nav .logo-title{color:var(--ink)}
+
+/* ============================================================
+   FIX: hero pills were dark-on-dark and unreadable
+   ============================================================ */
+.course-hero .pill,
+.course-hero .pill-invert{
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.42);
+  color:#fff;
+  font-weight:700;
+  backdrop-filter:blur(6px);
+}
+/* Keep the masthead photo from washing out the text */
+.course-hero::before{opacity:.20}
+.course-hero::after{
+  background:linear-gradient(120deg,rgba(4,38,52,.94) 0%,rgba(6,54,66,.86) 55%,rgba(8,83,91,.78) 100%)}
+
+/* ============================================================
+   TIGHTER RHYTHM — less dead space between sections
+   ============================================================ */
+section{padding:52px 0}
+.sec-head{margin-bottom:26px}
+.sec-head h2{padding-bottom:13px}
+.sec-head p{margin-top:9px}
+.hero{padding:64px 0 56px}
+.stats{margin-top:38px}
+.course-hero{padding:64px 0 52px}
+.course-main h2{margin:26px 0 12px}
+footer .footer-top{padding-top:44px;padding-bottom:34px}
+
+/* ============================================================
+   LEAD MAGNET
+   ============================================================ */
+.lead-magnet{background:linear-gradient(165deg,var(--brand-lt) 0%,#fff 70%);
+  border-top:3px solid var(--amber)}
+.lead-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+.lead-copy h2{font-size:clamp(25px,3.3vw,34px);font-weight:800;margin:8px 0 14px;
+  padding-bottom:0}
+.lead-copy h2::after{content:none}
+.lead-copy > p{color:var(--muted);font-size:16.5px;max-width:52ch}
+.lead-benefits{list-style:none;display:grid;gap:11px;margin:20px 0 18px}
+.lead-benefits li{position:relative;padding-left:30px;font-size:15.5px;font-weight:500}
+.lead-benefits li::before{content:"✓";position:absolute;left:0;top:-1px;
+  color:var(--amber);font-weight:800;font-size:17px}
+.lead-trust{font-size:13.5px;color:var(--muted);font-weight:600;
+  border-left:3px solid var(--amber);padding-left:12px}
+
+.lead-form-card{background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:30px 28px;box-shadow:0 14px 40px rgba(4,38,52,.13)}
+.lead-form-card h3{font-size:21px;font-weight:800;margin-bottom:5px}
+.lead-form-sub{font-size:14.5px;color:var(--muted);margin-bottom:20px}
+.lead-form-card form{background:transparent;border:0;padding:0;box-shadow:none;max-width:none}
+.lead-form-card .field{margin-bottom:14px}
+.lead-form-card .check{margin:6px 0 18px;font-size:13px}
+.btn-block{width:100%;text-align:center}
+.lead-fineprint{margin-top:11px;font-size:12.5px;color:var(--muted);text-align:center}
+
+@media(max-width:900px){
+  .lead-grid{grid-template-columns:1fr;gap:30px}
+  section{padding:44px 0}
+}

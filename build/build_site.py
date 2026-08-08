@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build the Al Mubin Training static site from courses_data.py."""
-import html, pathlib, sys
+import html, json, pathlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from courses_data import COURSES, PAST_RUNS, CONTACT, PHOTO, LABEL, TESTIMONIALS, HERO_PHOTO, FLYER_PHOTO
@@ -14,7 +14,7 @@ NAV = """<nav>
     <ul class="nav-links">
       <li><a href="{root}index.html#courses">Courses</a></li>
       <li><a href="{root}index.html#why">Why Us</a></li>
-      <li><a href="{root}index.html#record">Training Record</a></li>
+      <li><a href="{root}index.html#testimonials">Reviews</a></li>
       <li><a href="{root}index.html#contact">Contact</a></li>
     </ul>
     <a class="btn" href="{cta}">Enquire</a>
@@ -59,7 +59,7 @@ def footer(root=""):
       <ul>
         <li><a href="{root}index.html#why">Why train with us</a></li>
         <li><a href="{root}index.html#testimonials">Testimonials</a></li>
-        <li><a href="{root}index.html#record">Training record</a></li>
+        <li><a href="{root}index.html#guide">Free safety checklist</a></li>
         <li><a href="{root}index.html#contact">Contact us</a></li>
       </ul>
     </div>
@@ -121,9 +121,21 @@ COURSE_PAGE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} ({code}) — Al Mubin FC Training</title>
+<title>{seo_title}</title>
 <meta name="description" content="{lede}">
+<link rel="canonical" href="https://almubinfctraining.com.sg/courses/{slug}.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#063642">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Al Mubin FC Training">
+<meta property="og:title" content="{seo_title}">
+<meta property="og:description" content="{lede}">
+<meta property="og:url" content="https://almubinfctraining.com.sg/courses/{slug}.html">
+<meta property="og:image" content="{photo}">
+<meta property="og:locale" content="en_SG">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="../css/style.css">
+{jsonld}
 <style>.course-hero::before{{background-image:url('{photo}')}}</style>
 </head>
 <body>
@@ -278,11 +290,14 @@ def build_course(c):
         f"            <tr><td>{E(d)}</td><td>{E(v)}</td><td>{c['hours']} hrs</td>"
         f"<td>{E(s)}</td></tr>" for (d, v, s) in c["schedule"])
     return COURSE_PAGE.format(
+        jsonld=course_jsonld(c),
         title=E(c["title"]), code=c["code"], lede=E(c["lede"]),
         about=E(c["about"]), audience=E(c["audience"]),
         outcomes=outcomes, schedule=sched,
         duration=c["duration"], fee_str=fee_str(c["fee"]),
         label=LABEL[c["cat"]], photo=PHOTO[c["cat"]],
+        slug=c["slug"], hours=c["hours"], fee_num=c["fee"],
+        seo_title=f'{c["title"]} ({c["code"]}) | Al Mubin FC Training',
         nav=NAV.format(root="../", cta="#enquire"),
         support=SUPPORT, footer=footer("../"),
         testimonials=TESTIMONIAL_SECTION, **CONTACT)
@@ -293,9 +308,20 @@ INDEX = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Al Mubin FC Training — F&amp;B Workplace Training Singapore</title>
-<meta name="description" content="In-house halal handling, workplace safety and kitchen operations training for F&B teams in Singapore. Al Mubin Food Corner Pte. Ltd.">
+<title>Halal &amp; Workplace Safety Training for F&amp;B Teams | Singapore</title>
+<meta name="description" content="On-site halal handling, workplace safety and kitchen operations training for Singapore F&B teams. Delivered at your outlet in English &amp; Malay. Free 12-point safety checklist.">
+<link rel="canonical" href="https://almubinfctraining.com.sg/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#063642">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Al Mubin FC Training">
+<meta property="og:title" content="Halal &amp; Workplace Safety Training for F&amp;B Teams | Singapore">
+<meta property="og:description" content="On-site halal handling, workplace safety and kitchen operations training for Singapore F&B teams. Free 12-point safety checklist.">
+<meta property="og:url" content="https://almubinfctraining.com.sg/">
+<meta property="og:locale" content="en_SG">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="css/style.css">
+{jsonld}
 </head>
 <body>
 
@@ -312,7 +338,7 @@ INDEX = """<!DOCTYPE html>
         the line themselves. Short, hands-on sessions built around how your team actually works.</p>
       <div class="cta-row">
         <a class="btn btn-lg" href="#courses">Browse our courses</a>
-        <a class="btn btn-ghost btn-lg" href="https://wa.me/{whatsapp}" target="_blank" rel="noopener">💬 WhatsApp us</a>
+        <a class="btn btn-ghost btn-lg" href="#guide">Free safety checklist</a>
       </div>
       <ul class="hero-ticks">
         <li>✓ On-site at your premises</li>
@@ -368,63 +394,56 @@ INDEX = """<!DOCTYPE html>
 
 {testimonials}
 
-<section id="record">
+<section id="guide" class="lead-magnet">
   <div class="wrap">
-    <div class="sec-head">
-      <h2>Training record</h2>
-      <p>Every session below was delivered with attendance records, lesson plans,
-         assessment records and learner feedback retained on file.</p>
-    </div>
-    <div style="overflow-x:auto">
-    <table class="runs-table">
-      <thead><tr><th>S/N</th><th>Course title</th><th>Venue</th><th>Date</th><th>Duration</th><th>Age profile</th></tr></thead>
-      <tbody>
-{runs}
-      </tbody>
-    </table>
-    </div>
-  </div>
-</section>
+    <div class="lead-grid">
+      <div class="lead-copy">
+        <span class="eyebrow-sm">Free download · No cost</span>
+        <h2>The 12-Point Halal &amp; Food Safety Checklist for F&amp;B Outlets</h2>
+        <p>The same walkthrough our trainers use on site — the twelve things
+           SFA and halal auditors check first, written in plain English and Malay.
+           Print it, walk your kitchen, fix what you find before an inspector does.</p>
+        <ul class="lead-benefits">
+          <li>Segregation and labelling gaps that break halal compliance</li>
+          <li>Temperature, storage and FIFO checks that fail most often</li>
+          <li>The hazards that cause the majority of F&amp;B workplace injuries</li>
+        </ul>
+        <p class="lead-trust">Used by kitchen teams across Singapore · Takes 10 minutes to run</p>
+      </div>
 
-<section id="flyer">
-  <div class="wrap">
-    <div class="sec-head">
-      <h2>Marketing &amp; advertising flyer</h2>
-      <p>Ready to print or share. Also available as a standalone page for distribution.</p>
-    </div>
-    <div class="flyer">
-      <div class="flyer-top" style="background-image:linear-gradient(120deg,rgba(10,86,56,.93) 0%,rgba(10,86,56,.72) 55%,rgba(15,122,82,.55) 100%),url('{flyer_photo}')">
-        <div class="kicker">In-house training · Singapore</div>
-        <h3>Keep your kitchen safe, halal and inspection-ready.</h3>
-        <p>Short, practical training for food handlers, service crew and supervisors —
-           delivered at your premises, in English and Malay.</p>
-      </div>
-      <div class="flyer-body">
-        <div>
-          <h4>What your team walks away with</h4>
-          <ul class="flyer-list">
-            <li>Hazard spotting and accident prevention on the floor</li>
-            <li>Halal segregation and internal halal SOP compliance</li>
-            <li>Kitchen workflow planning and production forecasting</li>
-            <li>Safe manual handling, knife and hot-equipment technique</li>
-            <li>Performance monitoring against production targets</li>
-            <li>Certificate of attendance for every participant</li>
-          </ul>
-        </div>
-        <div class="price">
-          <div class="amt">8 hrs <small>/ session</small></div>
-          <ul>
-            <li><span>Fees from</span><b>S$280</b></li>
-            <li><span>Format</span><b>On-site, hands-on</b></li>
-            <li><span>Class size</span><b>Up to 20</b></li>
-            <li><span>Languages</span><b>English · Malay</b></li>
-            <li><span>Certificate</span><b>Included</b></li>
-          </ul>
-        </div>
-      </div>
-      <div class="flyer-foot">
-        <div><b>Book a session</b><br>{address_l1}, {address_l2}</div>
-        <div>📞 {tel_display} &nbsp;·&nbsp; ✉️ <a href="mailto:{email}">{email}</a></div>
+      <div class="lead-form-card">
+        <h3>Get the checklist</h3>
+        <p class="lead-form-sub">Enter your details and we'll email it to you right away.</p>
+        <form id="leadForm" action="https://formsubmit.co/{email}" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="Lead magnet: Halal &amp; Food Safety Checklist">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="lead_source" value="12-Point Checklist">
+          <div class="ok" id="leadOk"></div>
+          <div class="field">
+            <label for="lead_name">Name <span class="req">*</span></label>
+            <input type="text" id="lead_name" name="name" required autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="lead_email">Work email <span class="req">*</span></label>
+            <input type="email" id="lead_email" name="email" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="lead_outlet">Outlet / company</label>
+            <input type="text" id="lead_outlet" name="company" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="lead_phone">Mobile (for WhatsApp)</label>
+            <input type="tel" id="lead_phone" name="phone" placeholder="+65 " autocomplete="tel">
+          </div>
+          <label class="check">
+            <input type="checkbox" id="lead_pdpa" name="pdpa_consent" required>
+            <span>I consent to Al Mubin Food Corner Pte. Ltd. contacting me about this
+            checklist and its training courses, in line with the PDPA. <span class="req">*</span></span>
+          </label>
+          <button class="btn btn-lg btn-block" type="submit">Send me the checklist</button>
+          <p class="lead-fineprint">No spam. Unsubscribe any time.</p>
+        </form>
       </div>
     </div>
   </div>
@@ -434,10 +453,50 @@ INDEX = """<!DOCTYPE html>
 
 {footer}
 
-<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+<script src="js/enquiry.js"></script>
 </body>
 </html>
 """
+
+
+
+
+def course_jsonld(c):
+    site = "https://almubinfctraining.com.sg"
+    url = f"{site}/courses/{c['slug']}.html"
+    data = {"@context":"https://schema.org","@type":"Course",
+      "name":c["title"],"courseCode":c["code"],"description":c["lede"],
+      "url":url,"inLanguage":["en-SG","ms"],
+      "provider":{"@type":"Organization","name":"Al Mubin FC Training","url":f"{site}/"},
+      "offers":{"@type":"Offer","price":str(c["fee"]),"priceCurrency":"SGD",
+                "category":"Professional training",
+                "availability":"https://schema.org/InStock","url":url},
+      "hasCourseInstance":{"@type":"CourseInstance","courseMode":"onsite",
+        "location":{"@type":"Place","name":"On-site at your premises",
+                    "address":{"@type":"PostalAddress","addressCountry":"SG"}},
+        "courseWorkload":f"PT{c['hours']}H"}}
+    return ('<script type="application/ld+json">\n'
+            + json.dumps(data, ensure_ascii=False, indent=1) + '\n</script>')
+
+
+def index_jsonld():
+    site = "https://almubinfctraining.com.sg"
+    data = {"@context":"https://schema.org","@graph":[
+      {"@type":["LocalBusiness","EducationalOrganization"],
+       "@id":f"{site}/#org",
+       "name":"Al Mubin FC Training",
+       "legalName":"Al Mubin Food Corner Pte. Ltd.",
+       "url":f"{site}/",
+       "email":CONTACT["email"],
+       "telephone":CONTACT["tel_display"],
+       "areaServed":{"@type":"Country","name":"Singapore"},
+       "address":{"@type":"PostalAddress","streetAddress":CONTACT["address_l1"],
+                  "addressLocality":"Singapore","postalCode":"207668","addressCountry":"SG"},
+       "description":"On-site halal handling, workplace safety and kitchen operations training for F&B teams in Singapore."},
+      {"@type":"WebSite","@id":f"{site}/#website","url":f"{site}/",
+       "name":"Al Mubin FC Training","publisher":{"@id":f"{site}/#org"},"inLanguage":"en-SG"}]}
+    return ('<script type="application/ld+json">\n'
+            + json.dumps(data, ensure_ascii=False, indent=1) + '\n</script>')
 
 
 def build_index():
@@ -468,7 +527,8 @@ def build_index():
         f"<td>{h} hrs</td><td>{E(a)} yrs</td></tr>"
         for i, (t, v, h, d, a, _c) in enumerate(PAST_RUNS, 1))
 
-    return INDEX.format(nav=NAV.format(root="", cta="#courses"),
+    return INDEX.format(jsonld=index_jsonld(),
+                        nav=NAV.format(root="", cta="#courses"),
                         cards=cards, runs=runs, support=SUPPORT,
                         testimonials=TESTIMONIAL_SECTION,
                         hero_main=HERO_PHOTO["main"], hero_inset=HERO_PHOTO["inset"],
