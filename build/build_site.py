@@ -1,0 +1,494 @@
+#!/usr/bin/env python3
+"""Build the Al Mubin Training static site from courses_data.py."""
+import html, pathlib, sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from courses_data import COURSES, PAST_RUNS, CONTACT, PHOTO, LABEL, TESTIMONIALS, HERO_PHOTO, FLYER_PHOTO
+
+SITE = pathlib.Path(__file__).resolve().parent.parent
+E = html.escape
+
+NAV = """<nav>
+  <div class="wrap">
+    <div class="logo"><a href="{root}index.html">🍽️ Al Mubin <span>Training</span></a></div>
+    <ul class="nav-links">
+      <li><a href="{root}index.html#courses">Courses</a></li>
+      <li><a href="{root}index.html#why">Why Us</a></li>
+      <li><a href="{root}index.html#record">Training Record</a></li>
+      <li><a href="{root}index.html#contact">Contact</a></li>
+    </ul>
+    <a class="btn" href="{cta}">Enquire</a>
+  </div>
+</nav>"""
+
+SUPPORT = """<section id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Support &amp; contact</h2>
+      <p>Questions about a course, dates, fees or group bookings? Reach our training team directly.</p>
+    </div>
+    <div class="contact-grid">
+      <div><h3>Email</h3><p><a href="mailto:{email}">{email}</a></p></div>
+      <div><h3>Telephone</h3><p><a href="tel:{tel_href}">{tel_display}</a></p></div>
+      <div><h3>Training enquiries</h3><p>{manager}<br>{manager_title}</p></div>
+      <div><h3>Address</h3><p>{address_l1}<br>{address_l2}</p></div>
+    </div>
+  </div>
+</section>""".format(**CONTACT)
+
+def footer(root=""):
+    cl = "\n".join(
+        f'        <li><a href="{root}courses/{c["slug"]}.html">{E(c["title"])}</a></li>'
+        for c in COURSES)
+    return """<footer>
+  <div class="wrap footer-top">
+    <div class="footer-brand">
+      <div class="logo">🍽️ Al Mubin <span>Training</span></div>
+      <p>In-house food safety, halal handling, workplace safety and kitchen operations
+         training for F&amp;B teams across Singapore — delivered at your premises.</p>
+      <p class="uen"><b>Al Mubin Food Corner Pte. Ltd.</b><br>UEN 202216797E</p>
+    </div>
+    <div class="footer-col">
+      <h4>Courses</h4>
+      <ul>
+{courses}
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="{root}index.html#why">Why train with us</a></li>
+        <li><a href="{root}index.html#testimonials">Testimonials</a></li>
+        <li><a href="{root}index.html#record">Training record</a></li>
+        <li><a href="{root}index.html#contact">Contact us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Get in touch</h4>
+      <ul>
+        <li><a href="mailto:{email}">✉️ {email}</a></li>
+        <li><a href="tel:{tel_href}">📞 {tel_display}</a></li>
+        <li><a href="https://wa.me/{whatsapp}" target="_blank" rel="noopener">💬 WhatsApp us</a></li>
+        <li class="addr">📍 {address_l1}<br><span>{address_l2}</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <div>© <span id="yr"></span> Al Mubin Food Corner Pte. Ltd. All rights reserved.</div>
+    <div>Training delivered in English &amp; Malay · On-site across Singapore</div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/{whatsapp}?text={wa_text}"
+   target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+    <path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8c1.9 1 4 1.6 6.2 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.1 1.1-3.9-.3-.4c-1.1-1.7-1.6-3.6-1.6-5.7C5.3 10.1 10.1 5.3 16 5.3S26.7 10.1 26.7 16 21.9 26.6 16 26.6zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.7 5.9 5.2.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.3-.3-.6-.4z"/>
+  </svg>
+  <span class="wa-label">Chat with us</span>
+</a>""".format(courses=cl, root=root,
+               wa_text="Hi%20Al%20Mubin%20Training%2C%20I%27d%20like%20to%20enquire%20about%20a%20course.",
+               **CONTACT)
+
+
+TESTIMONIAL_SECTION = """<section id="testimonials" class="testimonials">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow-sm">Learner feedback</span>
+      <h2>What our learners say</h2>
+      <p>Collected from post-course evaluation forms retained on file for every run.</p>
+    </div>
+    <div class="quote-grid">
+{cards}
+    </div>
+  </div>
+</section>""".format(cards="\n".join("""      <figure class="quote-card">
+        <div class="quote-mark">&ldquo;</div>
+        <blockquote>{q}</blockquote>
+        <figcaption>
+          <div class="q-avatar">{initial}</div>
+          <div>
+            <b>{name}</b>
+            <span>{role}</span>
+            <span class="q-course">{course}</span>
+          </div>
+        </figcaption>
+      </figure>""".format(q=E(t["quote"]), name=E(t["name"]), role=E(t["role"]),
+                          course=E(t["course"]), initial=E(t["role"][0]))
+                    for t in TESTIMONIALS))
+
+COURSE_PAGE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title} ({code}) — Al Mubin Training</title>
+<meta name="description" content="{lede}">
+<link rel="stylesheet" href="../css/style.css">
+<style>.course-hero::before{{background-image:url('{photo}')}}</style>
+</head>
+<body>
+
+{nav}
+
+<header class="course-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="../index.html">Home</a> › <a href="../index.html#courses">Courses</a> › {title}</div>
+    <span class="eyebrow">{label} · {code}</span>
+    <h1>{title}</h1>
+    <p class="lede">{lede}</p>
+    <div class="pill-row">
+      <span class="pill pill-invert">📘 {code}</span>
+      <span class="pill pill-invert">⏱️ {duration}</span>
+      <span class="pill pill-invert">💰 {fee_str} per participant</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="course-layout">
+      <div class="course-main">
+        <h2>What this course is about</h2>
+        <p>{about}</p>
+
+        <h2>What you will learn</h2>
+        <ul class="flyer-list">
+{outcomes}
+        </ul>
+
+        <h2>Who should attend</h2>
+        <p>{audience}</p>
+
+        <h2>Course schedule</h2>
+        <p>Sessions run on site at your premises. Dates below are confirmed runs;
+           to arrange a new date for your team, use the enquiry form.</p>
+        <div style="overflow-x:auto;margin-top:14px">
+        <table class="runs-table">
+          <thead><tr><th>Date</th><th>Venue</th><th>Duration</th><th>Status</th></tr></thead>
+          <tbody>
+{schedule}
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <aside class="course-aside">
+        <div class="fact-card">
+          <h3>Course details</h3>
+          <ul>
+            <li><span>Course code</span><b>{code}</b></li>
+            <li><span>Course fee</span><b>{fee_str}</b></li>
+            <li><span>Duration</span><b>{duration}</b></li>
+            <li><span>Format</span><b>On-site, hands-on</b></li>
+            <li><span>Class size</span><b>Up to 20</b></li>
+            <li><span>Languages</span><b>English · Malay</b></li>
+            <li><span>Materials</span><b>Provided</b></li>
+            <li><span>Certificate</span><b>Attendance</b></li>
+          </ul>
+          <a class="btn" href="#enquire">Enquire about this course</a>
+          <div class="aside-contact">
+            <div>Speak to us directly</div>
+            <a href="mailto:{email}">✉️ {email}</a>
+            <a href="tel:{tel_href}">📞 {tel_display}</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="enquire">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Course enquiry</h2>
+      <p>Ask about dates, fees, group bookings or running <b>{title}</b> ({code})
+         at your own premises. We reply within 1–2 working days.</p>
+    </div>
+    <form id="enquiryForm" action="https://formsubmit.co/{email}" method="POST" novalidate>
+      <input type="hidden" name="_subject" value="Course enquiry: {code} {title}">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="course" value="{title}">
+      <input type="hidden" name="course_code" value="{code}">
+      <div class="ok" id="okMsg"></div>
+      <div class="fgrid">
+        <div class="field">
+          <label for="fname">Full name <span class="req">*</span></label>
+          <input type="text" id="fname" name="name" required autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="company">Company / outlet</label>
+          <input type="text" id="company" name="company">
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="req">*</span></label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="phone">Mobile <span class="req">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="+65 " required autocomplete="tel">
+        </div>
+        <div class="field">
+          <label for="pax">Estimated participants</label>
+          <input type="number" id="pax" name="pax" min="1" max="20" value="1">
+        </div>
+        <div class="field">
+          <label for="pdate">Preferred period</label>
+          <input type="month" id="pdate" name="preferred_period">
+        </div>
+        <div class="field full">
+          <label for="msg">Your enquiry</label>
+          <textarea id="msg" name="message"
+            placeholder="Tell us about your team, venue and what you'd like the training to cover."></textarea>
+        </div>
+        <label class="check">
+          <input type="checkbox" id="pdpa" name="pdpa_consent" required>
+          <span>I consent to Al Mubin Food Corner Pte. Ltd. collecting and using my personal
+          data to respond to this enquiry, in accordance with the PDPA. <span class="req">*</span></span>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="btn" type="submit">Send enquiry</button>
+        <span class="hint">Fields marked <span class="req">*</span> are required. Or email
+          <a href="mailto:{email}">{email}</a> · call <a href="tel:{tel_href}">{tel_display}</a>.</span>
+      </div>
+    </form>
+  </div>
+</section>
+
+{testimonials}
+
+{support}
+
+{footer}
+
+<script src="../js/enquiry.js"></script>
+</body>
+</html>
+"""
+
+
+def fee_str(fee):
+    return f"S${fee:,}"
+
+
+def build_course(c):
+    outcomes = "\n".join(f"          <li>{E(o)}</li>" for o in c["outcomes"])
+    sched = "\n".join(
+        f"            <tr><td>{E(d)}</td><td>{E(v)}</td><td>{c['hours']} hrs</td>"
+        f"<td>{E(s)}</td></tr>" for (d, v, s) in c["schedule"])
+    return COURSE_PAGE.format(
+        title=E(c["title"]), code=c["code"], lede=E(c["lede"]),
+        about=E(c["about"]), audience=E(c["audience"]),
+        outcomes=outcomes, schedule=sched,
+        duration=c["duration"], fee_str=fee_str(c["fee"]),
+        label=LABEL[c["cat"]], photo=PHOTO[c["cat"]],
+        nav=NAV.format(root="../", cta="#enquire"),
+        support=SUPPORT, footer=footer("../"),
+        testimonials=TESTIMONIAL_SECTION, **CONTACT)
+
+
+INDEX = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Al Mubin Food Corner — Workplace Training</title>
+<meta name="description" content="In-house halal handling, workplace safety and kitchen operations training for F&B teams in Singapore. Al Mubin Food Corner Pte. Ltd.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+{nav}
+
+<header class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">🕌 Halal-certified F&amp;B training · UEN 202216797E</span>
+      <h1>Practical training for <span class="hl">F&amp;B teams</span>.</h1>
+      <p class="lede">Halal handling, workplace safety and kitchen operations training —
+        delivered on site at your stall, kitchen or outlet by trainers who have worked
+        the line themselves. Short, hands-on sessions built around how your team actually works.</p>
+      <div class="cta-row">
+        <a class="btn btn-lg" href="#courses">Browse our courses</a>
+        <a class="btn btn-ghost btn-lg" href="https://wa.me/{whatsapp}" target="_blank" rel="noopener">💬 WhatsApp us</a>
+      </div>
+      <ul class="hero-ticks">
+        <li>✓ On-site at your premises</li>
+        <li>✓ English &amp; Malay</li>
+        <li>✓ Certificate included</li>
+      </ul>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="hero-photo hero-photo-1" style="background-image:url('{hero_main}')"></div>
+      <div class="hero-photo hero-photo-2" style="background-image:url('{hero_inset}')"></div>
+      <div class="hero-badge">
+        <b>17</b><span>course runs<br>delivered</span>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><span class="stat-ic">📚</span><b>3</b><span>Courses offered</span></div>
+      <div class="stat"><span class="stat-ic">🎓</span><b>17</b><span>Course runs delivered</span></div>
+      <div class="stat"><span class="stat-ic">⏱️</span><b>112</b><span>Training hours</span></div>
+      <div class="stat"><span class="stat-ic">📍</span><b>4</b><span>Partner venues</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="courses">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Our courses</h2>
+      <p>Open any course for the full syllabus, fee, schedule and an enquiry form.</p>
+    </div>
+    <div class="grid">
+{cards}
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head"><h2>Why train with us</h2></div>
+    <div class="feat">
+      <div><span class="ic">👨‍🍳</span><h3>Trainers from the trade</h3>
+        <p>Sessions are run by people who have worked the line, not read about it.</p></div>
+      <div><span class="ic">📍</span><h3>On-site delivery</h3>
+        <p>We come to your stall, kitchen or outlet — no downtime travelling to a classroom.</p></div>
+      <div><span class="ic">🕌</span><h3>Halal-first practice</h3>
+        <p>Halal handling and segregation built into every food-handling module.</p></div>
+      <div><span class="ic">📋</span><h3>Documented outcomes</h3>
+        <p>Objectives, lesson plans, assessment records and feedback analysis kept for every run.</p></div>
+    </div>
+  </div>
+</section>
+
+{testimonials}
+
+<section id="record">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Training record</h2>
+      <p>Every session below was delivered with attendance records, lesson plans,
+         assessment records and learner feedback retained on file.</p>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="runs-table">
+      <thead><tr><th>S/N</th><th>Course title</th><th>Venue</th><th>Date</th><th>Duration</th><th>Age profile</th></tr></thead>
+      <tbody>
+{runs}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="flyer">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Marketing &amp; advertising flyer</h2>
+      <p>Ready to print or share. Also available as a standalone page for distribution.</p>
+    </div>
+    <div class="flyer">
+      <div class="flyer-top" style="background-image:linear-gradient(120deg,rgba(10,86,56,.93) 0%,rgba(10,86,56,.72) 55%,rgba(15,122,82,.55) 100%),url('{flyer_photo}')">
+        <div class="kicker">In-house training · Singapore</div>
+        <h3>Keep your kitchen safe, halal and inspection-ready.</h3>
+        <p>Short, practical training for food handlers, service crew and supervisors —
+           delivered at your premises, in English and Malay.</p>
+      </div>
+      <div class="flyer-body">
+        <div>
+          <h4>What your team walks away with</h4>
+          <ul class="flyer-list">
+            <li>Hazard spotting and accident prevention on the floor</li>
+            <li>Halal segregation and internal halal SOP compliance</li>
+            <li>Kitchen workflow planning and production forecasting</li>
+            <li>Safe manual handling, knife and hot-equipment technique</li>
+            <li>Performance monitoring against production targets</li>
+            <li>Certificate of attendance for every participant</li>
+          </ul>
+        </div>
+        <div class="price">
+          <div class="amt">8 hrs <small>/ session</small></div>
+          <ul>
+            <li><span>Fees from</span><b>S$280</b></li>
+            <li><span>Format</span><b>On-site, hands-on</b></li>
+            <li><span>Class size</span><b>Up to 20</b></li>
+            <li><span>Languages</span><b>English · Malay</b></li>
+            <li><span>Certificate</span><b>Included</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="flyer-foot">
+        <div><b>Book a session</b><br>{address_l1}, {address_l2}</div>
+        <div>📞 {tel_display} &nbsp;·&nbsp; ✉️ <a href="mailto:{email}">{email}</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{support}
+
+{footer}
+
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+</body>
+</html>
+"""
+
+
+def build_index():
+    cards = "\n".join("""      <article class="card">
+        <div class="thumb" style="background-image:url('{photo}')" role="img"
+             aria-label="{label} training">
+          <span class="tag">{label}</span>
+        </div>
+        <div class="body">
+          <div class="code-line">{code}</div>
+          <h3><a href="courses/{slug}.html">{title}</a></h3>
+          <p class="desc">{lede}</p>
+          <div class="meta">
+            <span>⏱️ <b>{duration}</b></span>
+            <span>💰 <b>{fee}</b></span>
+          </div>
+          <div class="card-cta">
+            <a class="btn" href="courses/{slug}.html">View details &amp; enquire</a>
+          </div>
+        </div>
+      </article>""".format(
+        photo=PHOTO[c["cat"]], label=LABEL[c["cat"]], code=c["code"],
+        slug=c["slug"], title=E(c["title"]), lede=E(c["lede"]),
+        duration=c["duration"], fee=fee_str(c["fee"])) for c in COURSES)
+
+    runs = "\n".join(
+        f"        <tr><td>{i}</td><td>{E(t)}</td><td>{E(v)}</td><td>{E(d)}</td>"
+        f"<td>{h} hrs</td><td>{E(a)} yrs</td></tr>"
+        for i, (t, v, h, d, a, _c) in enumerate(PAST_RUNS, 1))
+
+    return INDEX.format(nav=NAV.format(root="", cta="#courses"),
+                        cards=cards, runs=runs, support=SUPPORT,
+                        testimonials=TESTIMONIAL_SECTION,
+                        hero_main=HERO_PHOTO["main"], hero_inset=HERO_PHOTO["inset"],
+                        flyer_photo=FLYER_PHOTO,
+                        footer=footer(""), **CONTACT)
+
+
+outdir = SITE / "courses"
+outdir.mkdir(exist_ok=True)
+# Remove pages for courses no longer offered.
+keep = {f"{c['slug']}.html" for c in COURSES}
+for old in outdir.glob("*.html"):
+    if old.name not in keep:
+        old.unlink()
+        print("removed", old.name)
+
+for c in COURSES:
+    (outdir / f"{c['slug']}.html").write_text(build_course(c), encoding="utf-8")
+    print("wrote courses/%s.html" % c["slug"])
+
+(SITE / "index.html").write_text(build_index(), encoding="utf-8")
+print("wrote index.html")
+print("done:", len(COURSES), "courses,", len(PAST_RUNS), "runs")
