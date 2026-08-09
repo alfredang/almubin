@@ -4,6 +4,30 @@
   var yr = document.getElementById('yr');
   if (yr) yr.textContent = new Date().getFullYear();
 
+  // WhatsApp widget — toggles the suggested-query panel. Set up before the
+  // form guard below, which returns early on pages that have no enquiry form.
+  var waToggle = document.getElementById('waToggle');
+  var waPanel = document.getElementById('waPanel');
+  if (waToggle && waPanel) {
+    var setWaOpen = function (open) {
+      waPanel.hidden = !open;
+      waToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    waToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setWaOpen(waPanel.hidden);
+    });
+    var waClose = waPanel.querySelector('.wa-close');
+    if (waClose) waClose.addEventListener('click', function () { setWaOpen(false); });
+    // Click outside or press Escape to dismiss.
+    document.addEventListener('click', function (e) {
+      if (!waPanel.hidden && !waPanel.contains(e.target)) setWaOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !waPanel.hidden) { setWaOpen(false); waToggle.focus(); }
+    });
+  }
+
   var form = document.getElementById('enquiryForm') || document.getElementById('leadForm');
   if (!form) return;
   var isLead = form.id === 'leadForm';

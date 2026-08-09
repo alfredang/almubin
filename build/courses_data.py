@@ -1,19 +1,45 @@
 # Single source of truth for the Al Mubin Training website.
 # Course codes: AMFC-<CAT><NN>. Fees are per-participant, GST not applicable
 # (Al Mubin is not GST-registered as of writing) -- confirm with client before launch.
+#
+# SWDA / SSG information-disclosure requirement
+# ---------------------------------------------
+# A Training Provider must disclose, on its website or brochures: course title,
+# course training duration, course fees, funding validity period, modes of training,
+# course objectives, the names of senior management and trainers, the organisation
+# structure, and the facilities & equipment used to conduct training.
+#
+# Per-course fields below cover title / duration / fees / funding_validity /
+# modes / outcomes (objectives) / facilities. Senior management, trainers and the
+# organisation structure are NOT yet on the site -- see TODO(client) at the bottom.
+#
+# TODO(client): funding_validity, modes and facilities below are SAMPLE VALUES
+# written to satisfy the disclosure format. Every one must be replaced with the
+# client's actual particulars before the site is published. In particular the
+# funding validity periods are placeholders -- Al Mubin's courses are in-house and
+# are not currently SSG-funded, so the correct disclosure may be "not applicable".
 
 CONTACT = {
     "email": "support@almubin.com.sg",
-    "tel_display": "+65 6291 0000",
-    "tel_href": "+6562910000",
-    # TODO(client): replace with the training team's WhatsApp mobile number.
-    # Digits only, country code first, no "+" -- this goes into the wa.me link.
-    "whatsapp": "6562910000",
+    "tel_display": "+65 9138 8967",
+    "tel_href": "+6591388967",
+    # Training team mobile. Digits only, country code first, no "+" -- wa.me link.
+    "whatsapp": "6591388967",
     "manager": "Nabisah Begum Binte MD Ibrahim",
     "manager_title": "Training Manager",
     "address_l1": "92 Syed Alwi Road",
     "address_l2": "Singapore 207668",
 }
+
+# Quick-start messages offered in the WhatsApp widget. Each becomes a prefilled
+# wa.me message so the enquirer does not have to type one from scratch.
+WA_SUGGESTIONS = [
+    "I'd like to know the course fees and available dates.",
+    "Can you run a course at my outlet?",
+    "Is this course eligible for funding?",
+    "How many staff can attend one session?",
+    "I'd like to speak to someone about a group booking.",
+]
 
 # Learner feedback collected from post-course evaluation forms.
 TESTIMONIALS = [
@@ -64,6 +90,16 @@ COURSES = [
         "hours": 8,
         "duration": "8 hours (1 day)",
         "fee": 280,
+        "funding_validity": "1 Jan 2026 – 31 Dec 2027",
+        "modes": ["Classroom / on-site facilitated", "Practical hands-on in your kitchen"],
+        "facilities": [
+            "Client's own working kitchen and service area, used as the live training floor",
+            "Portable projector, screen and laptop brought on site for the theory segment",
+            "Flip chart, whiteboard and printed learner guides for each participant",
+            "Demonstration PPE set: heat-resistant gloves, non-slip footwear, aprons",
+            "Fire extinguisher and fire blanket (training units) for suppression practice",
+            "First-aid kit, spill kit and hazard signage used in the response drills",
+        ],
         "lede": "Spot hazards before they become accidents — slips, burns, cuts, fire and manual handling — in a full-day, hands-on session on your own floor.",
         "about": "F&B kitchens concentrate more hazards per square metre than almost any other workplace: hot oil, sharp blades, wet floors, gas lines and heavy stock, all handled at speed during service. This full-day course trains your team to see those hazards before they cause harm, control them with the right technique and equipment, and respond correctly when something does go wrong. Every session is delivered at your own premises using your own equipment and layout, so the risks discussed are the actual risks your crew faces each shift — not classroom photographs. The course closes with your outlet's incident reporting and escalation procedure, so staff know exactly who to tell and what to record.",
         "outcomes": [
@@ -89,6 +125,16 @@ COURSES = [
         "hours": 8,
         "duration": "8 hours (1 day)",
         "fee": 280,
+        "funding_validity": "1 Jan 2026 – 31 Dec 2027",
+        "modes": ["Classroom / on-site facilitated", "Practical hands-on in your kitchen"],
+        "facilities": [
+            "Client's own storage, preparation and service areas, walked as part of the session",
+            "Portable projector, screen and laptop brought on site for the theory segment",
+            "Flip chart, whiteboard and printed learner guides for each participant",
+            "Segregated halal / non-halal utensil and chopping-board sets for the sorting exercise",
+            "Sample supplier halal certificates and delivery documents for the verification drill",
+            "Colour-coded labels, chiller shelf tags and the outlet's internal halal SOP checklists",
+        ],
         "lede": "Keep your kitchen halal-compliant end to end — sourcing, segregation, storage and service — aligned with your internal halal SOP.",
         "about": "Halal compliance rarely fails at the level of principle; it fails in the details. A shared chopping board, an unlabelled chiller shelf, a delivery accepted without checking the supplier's certificate — any one of these can break the halal chain and put your certification at risk. This full-day course walks your team through the complete halal chain as it runs in your own premises: receiving, storage, preparation, cooking and service. Learners practise the segregation habits your internal halal SOP requires, learn how to verify supplier certification and maintain the supporting records, and rehearse the correct response when a suspected breach occurs.",
         "outcomes": [
@@ -112,6 +158,17 @@ COURSES = [
         "hours": 8,
         "duration": "8 hours (1 day)",
         "fee": 380,
+        "funding_validity": "1 Jan 2026 – 31 Dec 2027",
+        "modes": ["Classroom / on-site facilitated", "Practical hands-on in your kitchen",
+                  "Case study and group discussion"],
+        "facilities": [
+            "Client's own kitchen line and stations, used for the workflow mapping exercise",
+            "Portable projector, screen and laptop brought on site for the theory segment",
+            "Flip chart, whiteboard and printed learner guides for each participant",
+            "Laptops or tablets for the production forecasting and KPI worksheets",
+            "Sample production schedules, mise en place templates and wastage logs",
+            "Kitchen scales, portioning tools and station timers for the yield exercise",
+        ],
         "lede": "Plan workflows, forecast production and hold your kitchen to measurable performance targets — the operational core of a well-run professional kitchen.",
         "about": "This course equips learners with the essential knowledge and practical skills needed to effectively manage kitchen operations and maintain optimal production levels within a professional culinary environment. Participants explore the fundamentals of kitchen operations planning, covering how to design efficient workflows, organise stations, and implement standard operating procedures that drive productivity and uphold service quality at every stage of service. Moving into production management, learners discover how to forecast food production requirements, adjust outputs in response to shifting demand, and apply the principles of mise en place to support consistent, reliable results. Strategies for optimising the use of labour, equipment and ingredients are examined alongside methods for analysing production data to reduce waste and identify opportunities for greater efficiency. The programme concludes by developing learners' capacity to monitor kitchen performance against established targets, interpret key performance indicators, take corrective action where shortfalls arise, and recognise how effective team communication and coordination are central to sustaining high-quality kitchen operations.",
         "outcomes": [

@@ -3,7 +3,9 @@
 import html, json, pathlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from courses_data import COURSES, PAST_RUNS, CONTACT, PHOTO, LABEL, TESTIMONIALS, HERO_PHOTO, FLYER_PHOTO
+from courses_data import (COURSES, PAST_RUNS, CONTACT, PHOTO, LABEL, TESTIMONIALS,
+                          HERO_PHOTO, FLYER_PHOTO, WA_SUGGESTIONS)
+from urllib.parse import quote
 
 SITE = pathlib.Path(__file__).resolve().parent.parent
 E = html.escape
@@ -35,6 +37,24 @@ SUPPORT = """<section id="contact">
     </div>
   </div>
 </section>""".format(**CONTACT)
+
+WA_ICON = ('<svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">'
+  '<path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8c1.9 1 4 1.6 '
+  '6.2 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.1 1.1-3.9-.3-.4c-1.1-1.7-1.6-3.6-1.6-5.7C5.3 '
+  '10.1 10.1 5.3 16 5.3S26.7 10.1 26.7 16 21.9 26.6 16 26.6zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2s-.8 1-1 '
+  '1.2c-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 '
+  '0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 '
+  '3.5c.2.2 2.4 3.7 5.9 5.2.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.3-.3-.6-.4z"/>'
+  '</svg>')
+
+
+def wa_suggestions():
+    """Prefilled wa.me quick-reply chips for the WhatsApp widget."""
+    return "\n".join(
+        f'        <a class="wa-chip" href="https://wa.me/{CONTACT["whatsapp"]}?text={quote(s)}"'
+        f' target="_blank" rel="noopener">{E(s)}</a>'
+        for s in WA_SUGGESTIONS)
+
 
 def footer(root=""):
     cl = "\n".join(
@@ -82,15 +102,36 @@ def footer(root=""):
   </div>
 </footer>
 
-<a class="wa-float" href="https://wa.me/{whatsapp}?text={wa_text}"
-   target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
-  <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-    <path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8c1.9 1 4 1.6 6.2 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.1 1.1-3.9-.3-.4c-1.1-1.7-1.6-3.6-1.6-5.7C5.3 10.1 10.1 5.3 16 5.3S26.7 10.1 26.7 16 21.9 26.6 16 26.6zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.7 5.9 5.2.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.3-.3-.6-.4z"/>
-  </svg>
-  <span class="wa-label">Chat with us</span>
-</a>""".format(courses=cl, root=root,
-               wa_text="Hi%20Al%20Mubin%20Training%2C%20I%27d%20like%20to%20enquire%20about%20a%20course.",
-               **CONTACT)
+<div class="wa-widget">
+  <div class="wa-panel" id="waPanel" hidden>
+    <div class="wa-panel-head">
+      <div class="wa-panel-avatar">{wa_icon}</div>
+      <div>
+        <b>Al Mubin FC Training</b>
+        <span>Typically replies within a few hours</span>
+      </div>
+      <button class="wa-close" type="button" aria-label="Close chat options">&times;</button>
+    </div>
+    <div class="wa-panel-body">
+      <p class="wa-greeting">Hi there 👋 &nbsp;What would you like to ask us about?</p>
+      <div class="wa-suggestions">
+{wa_suggestions}
+      </div>
+      <a class="wa-open" href="https://wa.me/{whatsapp}?text={wa_text}"
+         target="_blank" rel="noopener">Or start your own message</a>
+    </div>
+  </div>
+  <button class="wa-float" type="button" id="waToggle"
+          aria-expanded="false" aria-controls="waPanel"
+          aria-label="Chat with us on WhatsApp">
+    {wa_icon}
+    <span class="wa-label">Chat with us</span>
+  </button>
+</div>""".format(courses=cl, root=root,
+                 wa_icon=WA_ICON,
+                 wa_suggestions=wa_suggestions(),
+                 wa_text=quote("Hi Al Mubin Training, I'd like to enquire about a course."),
+                 **CONTACT)
 
 
 TESTIMONIAL_SECTION = """<section id="testimonials" class="testimonials">
@@ -166,13 +207,32 @@ COURSE_PAGE = """<!DOCTYPE html>
         <h2>What this course is about</h2>
         <p>{about}</p>
 
-        <h2>What you will learn</h2>
+        <h2>Course objectives</h2>
+        <p>By the end of this course, learners will be able to:</p>
         <ul class="flyer-list">
 {outcomes}
         </ul>
 
         <h2>Who should attend</h2>
         <p>{audience}</p>
+
+        <h2>Modes of training</h2>
+        <ul class="flyer-list">
+{modes}
+        </ul>
+
+        <h2>Course fees and funding</h2>
+        <p>The course fee is <b>{fee_str} per participant</b>, covering all training
+           materials and the certificate of attendance. Al Mubin Food Corner Pte. Ltd.
+           is not GST-registered, so no GST is charged.</p>
+        <p><b>Funding validity period:</b> {funding_validity}</p>
+
+        <h2>Facilities &amp; equipment used to conduct training</h2>
+        <p>Training is delivered at your premises. The following facilities and
+           equipment are used to conduct this course:</p>
+        <ul class="flyer-list">
+{facilities}
+        </ul>
 
         <h2>Course schedule</h2>
         <p>Sessions run on site at your premises. Dates below are confirmed runs;
@@ -194,6 +254,8 @@ COURSE_PAGE = """<!DOCTYPE html>
             <li><span>Course code</span><b>{code}</b></li>
             <li><span>Course fee</span><b>{fee_str}</b></li>
             <li><span>Duration</span><b>{duration}</b></li>
+            <li class="stack"><span>Funding validity</span><b>{funding_validity}</b></li>
+            <li class="stack"><span>Modes of training</span><b>{modes_short}</b></li>
             <li><span>Format</span><b>On-site, hands-on</b></li>
             <li><span>Class size</span><b>Up to 20</b></li>
             <li><span>Languages</span><b>English · Malay</b></li>
@@ -287,8 +349,15 @@ def fee_str(fee):
     return f"S${fee:,}"
 
 
+def modes_short(c):
+    """One-line summary of the training modes, for narrow cards and sidebars."""
+    return " · ".join(m.split(" / ")[0].split(" in ")[0].strip() for m in c["modes"])
+
+
 def build_course(c):
     outcomes = "\n".join(f"          <li>{E(o)}</li>" for o in c["outcomes"])
+    modes = "\n".join(f"          <li>{E(m)}</li>" for m in c["modes"])
+    facilities = "\n".join(f"          <li>{E(f)}</li>" for f in c["facilities"])
     sched = "\n".join(
         f"            <tr><td>{E(d)}</td><td>{E(v)}</td><td>{c['hours']} hrs</td>"
         f"<td>{E(s)}</td></tr>" for (d, v, s) in c["schedule"])
@@ -297,6 +366,9 @@ def build_course(c):
         title=E(c["title"]), code=c["code"], lede=E(c["lede"]),
         about=E(c["about"]), audience=E(c["audience"]),
         outcomes=outcomes, schedule=sched,
+        modes=modes, facilities=facilities,
+        funding_validity=E(c["funding_validity"]),
+        modes_short=E(modes_short(c)),
         duration=c["duration"], fee_str=fee_str(c["fee"]),
         label=LABEL[c["cat"]], photo=PHOTO[c["cat"]],
         slug=c["slug"], hours=c["hours"], fee_num=c["fee"],
@@ -515,6 +587,8 @@ def build_index():
           <div class="meta">
             <span>⏱️ <b>{duration}</b></span>
             <span>💰 <b>{fee}</b></span>
+            <span>🎓 <b>{modes_short}</b></span>
+            <span>📅 Funding validity: <b>{funding_validity}</b></span>
           </div>
           <div class="card-cta">
             <a class="btn" href="courses/{slug}.html">View details &amp; enquire</a>
@@ -523,6 +597,7 @@ def build_index():
       </article>""".format(
         photo=PHOTO[c["cat"]], label=LABEL[c["cat"]], code=c["code"],
         slug=c["slug"], title=E(c["title"]), lede=E(c["lede"]),
+        modes_short=E(modes_short(c)), funding_validity=E(c["funding_validity"]),
         duration=c["duration"], fee=fee_str(c["fee"])) for c in COURSES)
 
     runs = "\n".join(

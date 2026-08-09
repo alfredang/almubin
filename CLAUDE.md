@@ -55,15 +55,19 @@ CSS and JS are **not** generated; edit `css/style.css` and `js/enquiry.js` direc
 
 ## Design system
 
-Malay-heritage / halal F&B theme. Green + songket gold.
+Deep teal ground + amber accent, taken from the client's holding page.
 
 | Token | Value | Use |
 |---|---|---|
-| `--brand` | `#0f7a52` | primary green, buttons, links |
-| `--brand-dk` | `#0a5638` | hovers, hero gradients |
-| `--brand-lt` | `#e6f4ee` | tinted panels |
-| `--gold` | `#c8892b` | songket accents |
-| `--ink` | `#0f2119` | body text, footer background |
+| `--brand` | `#08535b` | primary teal, buttons, WhatsApp widget |
+| `--brand-dk` | `#063642` | hovers, hero gradients, panel headers |
+| `--brand-lt` | `#e6f1f3` | tinted panels |
+| `--amber` / `--gold` | `#f6bd3c` | accents, logo badge, CTA buttons |
+| `--ink` | `#062b36` | body text |
+| `--teal-dk` | `#042634` | footer background |
+
+The WhatsApp widget deliberately uses brand teal rather than WhatsApp green so it
+sits inside the palette; keep it that way if you restyle it.
 
 Recurring motifs — keep these when adding sections:
 
@@ -128,10 +132,16 @@ Installed under `.claude/skills/` (symlinked from `.agents/skills/`):
 
 These need the client's confirmation before the site goes public:
 
-1. **WhatsApp number** — `courses_data.py` currently points `wa.me` at the office
-   landline `6562910000`, which will not work. Replace with a real mobile.
-2. **Course fees** — S$280 / S$380 were set for the site, not taken from a client
+1. **Course fees** — S$280 / S$380 were set for the site, not taken from a client
    price list. Confirm, and confirm GST treatment.
+2. **SWDA disclosure fields** — `funding_validity`, `modes` and `facilities` in
+   `courses_data.py` are SAMPLE values written to satisfy the SWDA information-
+   disclosure format. All must be replaced with the client's actual particulars.
+   The funding validity periods in particular are placeholders: these are in-house
+   courses and are not currently SSG-funded, so the honest disclosure may be
+   "not applicable". The disclosure list also requires the **names of senior
+   management and trainers** and the **organisation structure**, which are not yet
+   anywhere on the site.
 3. **Course codes** — `AMFC-WS01` / `AMFC-HL01` / `AMFC-KO01` were assigned here.
 4. **Testimonials** — written from the profile of the courses and venues on record.
    They are **not** verbatim learner quotes. Either replace them with real quotes from

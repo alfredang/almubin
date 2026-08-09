@@ -51,6 +51,22 @@ CSS and JS are hand-maintained — edit `css/style.css` and `js/enquiry.js` dire
 | `AMFC-HL01` | Halal Handling & Internal Halal SOP | 8 hours | S$280 |
 | `AMFC-KO01` | Manage Operations and Production Levels in Kitchen | 8 hours | S$380 |
 
+### Information disclosure (SWDA)
+
+A Training Provider must disclose, on its website or brochures: course title, training
+duration, fees, funding validity period, modes of training, course objectives, the names
+of senior management and trainers, the organisation structure, and the facilities &
+equipment used to conduct training.
+
+Each course page carries **title, duration, fees, funding validity, modes of training,
+course objectives and facilities & equipment**, driven from per-course fields in
+`build/courses_data.py`.
+
+> **Not yet complete.** The `funding_validity`, `modes` and `facilities` values are
+> sample content pending the client's actual particulars, and **senior management,
+> trainers and the organisation structure are not yet published anywhere on the site.**
+> See *Open items* in [CLAUDE.md](CLAUDE.md).
+
 ## Lead capture
 
 Two form types, both posting to [FormSubmit](https://formsubmit.co) — no backend required:
@@ -58,6 +74,9 @@ Two form types, both posting to [FormSubmit](https://formsubmit.co) — no backe
 - **Course enquiry** — one per course page, tagged with the course code.
 - **Lead magnet** — the free *12-Point Halal & Food Safety Checklist*, capturing name, email,
   outlet and mobile with PDPA consent.
+- **WhatsApp widget** — a floating button on every page opens a panel of suggested questions,
+  each a prefilled `wa.me` message to `+65 9138 8967`. Styled in brand teal rather than
+  WhatsApp green; edit `WA_SUGGESTIONS` in `build/courses_data.py` to change the prompts.
 
 > **FormSubmit needs one-time activation.** The first submission triggers a confirmation email to
 > `support@almubin.com.sg`. Until someone clicks it, submissions are silently discarded.
@@ -94,4 +113,4 @@ Then open http://localhost:8125.
 
 See [CLAUDE.md](CLAUDE.md) for the design system, the image-verification rule (dead Unsplash IDs
 render as blank panels), the Traefik entrypoint constraint on this server, and the list of items
-still needing client sign-off — WhatsApp number, fees, course codes and testimonials.
+still needing client sign-off — fees, course codes, testimonials and the SWDA disclosure fields.
