@@ -69,9 +69,11 @@ course objectives and facilities & equipment**, driven from per-course fields in
 
 ## Lead capture
 
-Two form types, both posting to [FormSubmit](https://formsubmit.co) — no backend required:
+Three form types, all posting to [FormSubmit](https://formsubmit.co) — no backend required:
 
 - **Course enquiry** — one per course page, tagged with the course code.
+- **Contact** — in the Support & contact section on every page, alongside the contact
+  details and an embedded Google map of the training venue (keyless embed, no API key).
 - **Lead magnet** — the free *12-Point Halal & Food Safety Checklist*, capturing name, email,
   outlet and mobile with PDPA consent.
 - **WhatsApp widget** — a floating button on every page opens a panel of suggested questions,

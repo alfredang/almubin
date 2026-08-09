@@ -23,20 +23,94 @@ NAV = """<nav>
   </div>
 </nav>"""
 
-SUPPORT = """<section id="contact">
+# Keyless Google Maps embed -- no API key, so nothing secret ever reaches the repo.
+SUPPORT = """<section id="contact" class="contact-sec">
   <div class="wrap">
     <div class="sec-head">
       <h2>Support &amp; contact</h2>
-      <p>Questions about a course, dates, fees or group bookings? Reach our training team directly.</p>
+      <p>Questions about a course, dates, fees or group bookings? Send us a message
+         or reach our training team directly.</p>
     </div>
-    <div class="contact-grid">
-      <div><h3>Email</h3><p><a href="mailto:{email}">{email}</a></p></div>
-      <div><h3>Telephone</h3><p><a href="tel:{tel_href}">{tel_display}</a></p></div>
-      <div><h3>Training enquiries</h3><p>{manager}<br>{manager_title}</p></div>
-      <div><h3>Address</h3><p>{address_l1}<br>{address_l2}</p></div>
+
+    <div class="contact-layout">
+      <div class="contact-form-card">
+        <h3>Send us a message</h3>
+        <p class="contact-form-sub">We reply within 1&ndash;2 working days.</p>
+        <form id="contactForm" action="https://formsubmit.co/{email}" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="Website contact enquiry">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <div class="ok" id="contactOk"></div>
+          <div class="fgrid">
+            <div class="field">
+              <label for="c_name">Full name <span class="req">*</span></label>
+              <input type="text" id="c_name" name="name" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="c_company">Company / outlet</label>
+              <input type="text" id="c_company" name="company" autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="c_email">Email <span class="req">*</span></label>
+              <input type="email" id="c_email" name="email" required autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="c_phone">Mobile</label>
+              <input type="tel" id="c_phone" name="phone" placeholder="+65 " autocomplete="tel">
+            </div>
+            <div class="field full">
+              <label for="c_msg">Your message <span class="req">*</span></label>
+              <textarea id="c_msg" name="message" required
+                placeholder="Tell us what you'd like to know &mdash; course, dates, team size or venue."></textarea>
+            </div>
+            <label class="check">
+              <input type="checkbox" id="c_pdpa" name="pdpa_consent" required>
+              <span>I consent to Al Mubin Food Corner Pte. Ltd. collecting and using my personal
+              data to respond to this enquiry, in accordance with the PDPA. <span class="req">*</span></span>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button class="btn" type="submit">Send message</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="contact-side">
+        <ul class="contact-list">
+          <li>
+            <span class="ci">&#9993;</span>
+            <div><b>Email</b><a href="mailto:{email}">{email}</a></div>
+          </li>
+          <li>
+            <span class="ci">&#128222;</span>
+            <div><b>Telephone</b><a href="tel:{tel_href}">{tel_display}</a></div>
+          </li>
+          <li>
+            <span class="ci">&#128172;</span>
+            <div><b>WhatsApp</b><a href="https://wa.me/{whatsapp}" target="_blank" rel="noopener">Chat with us</a></div>
+          </li>
+          <li>
+            <span class="ci">&#128100;</span>
+            <div><b>Training enquiries</b><span>{manager}<br>{manager_title}</span></div>
+          </li>
+          <li>
+            <span class="ci">&#128205;</span>
+            <div><b>Address</b><span>{address_l1}<br>{address_l2}</span></div>
+          </li>
+        </ul>
+        <div class="contact-map">
+          <iframe
+            src="https://maps.google.com/maps?q={map_q}&amp;z=16&amp;output=embed"
+            title="Map showing {address_l1}, {address_l2}"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        </div>
+        <a class="map-link" href="https://maps.google.com/maps?q={map_q}"
+           target="_blank" rel="noopener">Open in Google Maps &rarr;</a>
+      </div>
     </div>
   </div>
-</section>""".format(**CONTACT)
+</section>""".format(map_q=quote(f'{CONTACT["address_l1"]}, {CONTACT["address_l2"]}'), **CONTACT)
 
 WA_ICON = ('<svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">'
   '<path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8c1.9 1 4 1.6 '
