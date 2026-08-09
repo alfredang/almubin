@@ -90,6 +90,31 @@ LABEL = {
     "service": "Service & Leadership", "kitchen": "Kitchen Operations",
 }
 
+# Per-course product images, keyed by slug. Several courses share a category
+# (three are "service"), so the photo cannot be derived from `cat` alone --
+# without these they would all show the same picture. A course with no entry
+# here falls back to PHOTO[cat]. Every URL below was verified HTTP 200 and the
+# image was opened and checked for subject matter before being added.
+# NOTE: prefer free-tier images.unsplash.com URLs. Some plus.unsplash.com
+# ("Unsplash+") photos are served to browsers with a repeating "Unsplash+"
+# watermark even though a direct curl of the same URL comes back clean -- so a
+# 200 check is NOT enough. Always open the page in a browser and look at the
+# image before committing a plus.unsplash.com URL.
+COURSE_PHOTO = {
+    # chef in uniform prepping vegetables in a commercial kitchen
+    "food-safety-hygiene":
+        "https://images.unsplash.com/photo-1574966740793-953ad374e8fe",
+    # uniformed kitchen brigade working a service line
+    "supervisor-team-leadership":
+        "https://images.unsplash.com/photo-1776142519748-2b897acaecd7",
+    # staff preparing drinks behind a beverage counter
+    "beverage-handling":
+        "https://images.unsplash.com/photo-1513663580958-665b7ef55d1b",
+    # packed takeaway meal trays lined up in a production kitchen
+    "takeaway-counter-services":
+        "https://images.unsplash.com/photo-1675647699232-76b8f533b006",
+}
+
 COURSES = [
     {
         "slug": "workplace-safety",
@@ -189,6 +214,147 @@ COURSES = [
         ],
         "audience": "Aspiring kitchen supervisors, commis and junior chefs seeking career advancement, and hospitality professionals developing stronger operational capabilities. Suitable for beginner to intermediate learners.",
         "schedule": [
+            ("Intake forming", "On-site at your premises", "Enquire"),
+        ],
+    },
+    {
+        "slug": "food-safety-hygiene",
+        "code": "AMFC-FS01",
+        "title": "Food Safety and Hygiene (Internal SOP Training)",
+        "cat": "food",
+        "hours": 8,
+        "duration": "8 hours (1 day)",
+        "fee": 280,
+        "funding_validity": "1 Jan 2026 – 31 Dec 2027",
+        "modes": ["Classroom / on-site facilitated", "Practical hands-on in your kitchen"],
+        "facilities": [
+            "Client's own preparation, storage and service areas, walked as part of the session",
+            "Portable projector, screen and laptop brought on site for the theory segment",
+            "Flip chart, whiteboard and printed learner guides for each participant",
+            "Calibrated probe thermometers and chiller/freezer logs for the temperature checks",
+            "Handwashing station, sanitiser and colour-coded cleaning cloths for the hygiene drill",
+            "The outlet's own internal food safety SOP and record templates",
+        ],
+        "lede": "Keep food safe from delivery to service — personal hygiene, temperature control, storage and cleaning — run against your own internal SOP.",
+        "about": "Most food safety failures are ordinary lapses repeated under pressure: a probe that is never calibrated, a chiller that is never logged, a cloth that wipes both the board and the bench. This full-day course works through the food safety chain exactly as it runs in your own premises — receiving, storage, preparation, cooking, holding and service — and ties each step back to your outlet's internal SOP. Learners practise the checks that matter most in a busy kitchen: personal hygiene and handwashing discipline, temperature control and the records that evidence it, separation of raw and ready-to-eat foods, stock rotation, and the cleaning and sanitising routine. The session closes on what to do when something is out of specification, who to tell, and what to write down.",
+        "outcomes": [
+            "Apply personal hygiene and handwashing standards required of a food handler",
+            "Control time and temperature across receiving, storage, cooking, holding and service",
+            "Separate raw and ready-to-eat foods to prevent cross-contamination",
+            "Apply stock rotation, labelling and date-marking in line with the outlet's SOP",
+            "Carry out the cleaning and sanitising routine, and complete the supporting records",
+            "Respond correctly when food is out of specification, including escalation and record-keeping",
+        ],
+        "audience": "All food handlers, kitchen crew and service staff, including supervisors responsible for food safety records.",
+        "schedule": [
+            ("08 Jul 2024", "3 Monkeys", "Completed"),
+            ("22 Jul 2024", "Zamas", "Completed"),
+            ("12 Mar 2025", "Adam Food Corner", "Completed"),
+            ("Intake forming", "On-site at your premises", "Enquire"),
+        ],
+    },
+    {
+        "slug": "supervisor-team-leadership",
+        "code": "AMFC-SL01",
+        "title": "Supervisor & Team Leadership",
+        "cat": "service",
+        "hours": 8,
+        "duration": "8 hours (1 day)",
+        "fee": 380,
+        "funding_validity": "1 Jan 2026 – 31 Dec 2027",
+        "modes": ["Classroom / on-site facilitated", "Role-play and group discussion",
+                  "Case study"],
+        "facilities": [
+            "Client's own outlet or a meeting space on site for the discussion segments",
+            "Portable projector, screen and laptop brought on site for the theory segment",
+            "Flip chart, whiteboard and printed learner guides for each participant",
+            "Role-play scenario cards drawn from real F&B shift situations",
+            "Sample duty rosters, briefing templates and performance record forms",
+        ],
+        "lede": "Run a shift, brief a team and handle the difficult conversations — practical supervisory skills for F&B floor and kitchen leaders.",
+        "about": "Most F&B supervisors are promoted for being good at the work, not for being trained to lead it. This full-day course fills that gap with the everyday skills a shift leader actually needs: planning and briefing a shift, allocating work across a mixed team, giving instructions that survive a busy service, and holding people to standard without losing them. Learners practise the conversations supervisors avoid — correcting a repeat mistake, handling a complaint in front of customers, resolving friction between crew members — through role-play built on situations from their own outlets. The course also covers the supervisor's compliance role: enforcing hygiene, halal and safety standards on the floor, and keeping the records that show it was done.",
+        "outcomes": [
+            "Plan and brief a shift, allocating work across the team against the day's demand",
+            "Give clear instructions and delegate effectively during a busy service",
+            "Give feedback, correct performance and handle difficult conversations constructively",
+            "Resolve conflict within the team and de-escalate customer complaints",
+            "Motivate and develop crew members, including new and part-time staff",
+            "Uphold hygiene, halal and safety standards on the floor and maintain the supporting records",
+        ],
+        "audience": "Supervisors, team leaders, senior crew and anyone stepping up into a shift-leading role in an F&B outlet.",
+        "schedule": [
+            ("23 Sep 2024", "Zamas", "Completed"),
+            ("Intake forming", "On-site at your premises", "Enquire"),
+        ],
+    },
+    {
+        "slug": "beverage-handling",
+        "code": "AMFC-BH01",
+        "title": "Beverage Handling",
+        "cat": "service",
+        "hours": 8,
+        "duration": "8 hours (1 day)",
+        "fee": 280,
+        "funding_validity": "1 Jan 2026 – 31 Dec 2027",
+        "modes": ["Classroom / on-site facilitated", "Practical hands-on at your beverage station"],
+        "facilities": [
+            "Client's own beverage counter, station and equipment, used as the training floor",
+            "Portable projector, screen and laptop brought on site for the theory segment",
+            "Flip chart, whiteboard and printed learner guides for each participant",
+            "Blenders, dispensers, shakers, jiggers and ice wells for the preparation practice",
+            "Measuring jugs, portioning scoops and recipe cards for the consistency exercise",
+            "Cleaning and sanitising materials for the equipment hygiene routine",
+        ],
+        "lede": "Prepare, serve and store beverages safely and consistently — hygiene, recipe accuracy and equipment care at a busy counter.",
+        "about": "Beverages are prepared fast, handled by many hands and often overlooked in food safety training — yet ice, dispensers, blenders and syrups are all common contamination points. This full-day course covers the beverage operation end to end as it runs at your own counter: receiving and storing ingredients, ice handling, preparing hot and cold drinks to a consistent recipe, and serving at speed without cutting hygiene corners. Learners practise portioning and recipe accuracy so that the same drink tastes the same on every shift, and work through the cleaning and sanitising schedule for each piece of equipment — the step most often skipped when the queue is long. Halal considerations for ingredients, syrups and shared equipment are built into the session.",
+        "outcomes": [
+            "Store and handle beverage ingredients, ice and garnishes hygienically",
+            "Prepare hot and cold beverages to a consistent recipe and portion standard",
+            "Operate and clean beverage equipment safely, including blenders and dispensers",
+            "Apply the cleaning and sanitising schedule for the beverage station",
+            "Verify that ingredients and shared equipment meet the outlet's halal requirements",
+            "Serve beverages at speed while maintaining hygiene and presentation standards",
+        ],
+        "audience": "Beverage crew, counter staff and kitchen crew who prepare or serve drinks, including new hires and part-timers.",
+        "schedule": [
+            ("13 Jan 2025", "3 Monkeys", "Completed"),
+            ("Intake forming", "On-site at your premises", "Enquire"),
+        ],
+    },
+    {
+        "slug": "takeaway-counter-services",
+        "code": "AMFC-TC01",
+        "title": "Takeaway and Counter Services",
+        "cat": "service",
+        "hours": 8,
+        "duration": "8 hours (1 day)",
+        # Pro-bono: delivered free of charge to food court stalls. fee=0 renders as
+        # "Free (Pro-Bono)" rather than a dollar amount.
+        "fee": 0,
+        "pro_bono": True,
+        "funding_validity": "Not applicable — delivered pro-bono",
+        "modes": ["Classroom / on-site facilitated", "Practical hands-on at your counter"],
+        "facilities": [
+            "Client's own service counter and takeaway station, used as the training floor",
+            "Portable projector, screen and laptop brought on site for the theory segment",
+            "Flip chart, whiteboard and printed learner guides for each participant",
+            "Takeaway containers, lids, bags and labels for the packing practice",
+            "Sample order tickets and delivery-platform labels for the accuracy exercise",
+            "Handwashing station, sanitiser and glove stock for the hygiene segment",
+        ],
+        "lede": "Serve, pack and hand over takeaway orders accurately and hygienically — counter service, packing standards and queue handling.",
+        "about": "Takeaway and counter service is where most customers actually meet the business, and where mistakes are most visible: the wrong order, a leaking container, a cold meal, a queue that stops moving. This full-day course is delivered pro-bono to food court stalls and small operators, and covers the counter operation end to end at your own premises. Learners work on order taking and accuracy, packing standards that keep food at temperature and intact in transit, correct labelling for both walk-in and delivery-platform orders, and hygienic handling at the point of handover. The session also covers the customer-facing side — greeting, handling a queue under pressure, and dealing with a complaint without escalating it — plus the halal segregation that packing and shared utensils must respect.",
+        "outcomes": [
+            "Take and confirm orders accurately, including delivery-platform orders",
+            "Pack takeaway orders to keep food at temperature, intact and correctly separated",
+            "Label orders correctly, including allergen, halal and delivery information",
+            "Handle food hygienically at the counter and point of handover",
+            "Manage a queue under pressure while maintaining service standards",
+            "Handle customer complaints and order errors calmly and correctly",
+        ],
+        "audience": "Counter and takeaway crew at food court stalls, kiosks and small outlets, including part-time and new service staff.",
+        "schedule": [
+            ("05 May 2025", "Food Court Stalls (Pro-Bono)", "Completed"),
             ("Intake forming", "On-site at your premises", "Enquire"),
         ],
     },

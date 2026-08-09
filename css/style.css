@@ -257,6 +257,11 @@ footer b{color:#fff}
 .course-layout{display:grid;grid-template-columns:1.6fr 1fr;gap:38px;align-items:start}
 .course-main h2{font-size:22px;font-weight:800;margin:34px 0 14px}
 .course-main h2:first-child{margin-top:0}
+/* Product image at the top of the course body. aspect-ratio + object-fit keeps
+   every course the same shape regardless of the source photo's dimensions. */
+.course-photo{margin:0 0 30px;border-radius:16px;overflow:hidden;background:var(--soft)}
+.course-photo img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;height:auto}
+.course-main .course-photo+h2{margin-top:0}
 .course-main p{color:var(--muted);font-size:15.5px}
 .course-aside{position:sticky;top:88px}
 .fact-card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:24px}

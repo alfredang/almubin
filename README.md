@@ -50,6 +50,10 @@ CSS and JS are hand-maintained — edit `css/style.css` and `js/enquiry.js` dire
 | `AMFC-WS01` | Workplace Safety & Accident Prevention for the F&B Industry | 8 hours | S$280 |
 | `AMFC-HL01` | Halal Handling & Internal Halal SOP | 8 hours | S$280 |
 | `AMFC-KO01` | Manage Operations and Production Levels in Kitchen | 8 hours | S$380 |
+| `AMFC-FS01` | Food Safety and Hygiene (Internal SOP Training) | 8 hours | S$280 |
+| `AMFC-SL01` | Supervisor & Team Leadership | 8 hours | S$380 |
+| `AMFC-BH01` | Beverage Handling | 8 hours | S$280 |
+| `AMFC-TC01` | Takeaway and Counter Services | 8 hours | Free (Pro-Bono) |
 
 ### Information disclosure (SWDA)
 

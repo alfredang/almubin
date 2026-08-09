@@ -89,6 +89,17 @@ curl -s -o /dev/null -w "%{http_code}" "https://images.unsplash.com/photo-XXXX?a
 
 A 404 renders as a blank coloured box, which is easy to miss without a screenshot.
 
+**A 200 is not sufficient on its own.** Some `plus.unsplash.com` ("Unsplash+") photos are
+served to *browsers* with a repeating "Unsplash+" watermark, even though `curl` of the same
+URL returns a clean image. Always load the page in a browser and look at the picture before
+committing a `plus.unsplash.com` URL. Free-tier `images.unsplash.com` URLs are never
+watermarked, so prefer them. (Three `plus.` URLs currently in use were checked in-browser
+and are clean.)
+
+Per-course product images live in `COURSE_PHOTO` in `courses_data.py`, keyed by slug, and
+fall back to `PHOTO[cat]`. They cannot be derived from `cat` alone — three courses share
+the `service` category and would otherwise all show the same picture.
+
 ## Enquiry forms
 
 Each course page carries its own enquiry form posting to

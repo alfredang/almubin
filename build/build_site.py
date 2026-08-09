@@ -4,7 +4,8 @@ import html, json, pathlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from courses_data import (COURSES, PAST_RUNS, CONTACT, PHOTO, LABEL, TESTIMONIALS,
-                          HERO_PHOTO, FLYER_PHOTO, WA_SUGGESTIONS, GOOGLE_REVIEW_URL)
+                          HERO_PHOTO, FLYER_PHOTO, WA_SUGGESTIONS, GOOGLE_REVIEW_URL,
+                          COURSE_PHOTO)
 from urllib.parse import quote
 
 SITE = pathlib.Path(__file__).resolve().parent.parent
@@ -292,7 +293,7 @@ COURSE_PAGE = """<!DOCTYPE html>
     <div class="pill-row">
       <span class="pill pill-invert">📘 {code}</span>
       <span class="pill pill-invert">⏱️ {duration}</span>
-      <span class="pill pill-invert">💰 {fee_str} per participant</span>
+      <span class="pill pill-invert">💰 {fee_pill}</span>
     </div>
   </div>
 </header>
@@ -301,6 +302,10 @@ COURSE_PAGE = """<!DOCTYPE html>
   <div class="wrap">
     <div class="course-layout">
       <div class="course-main">
+        <figure class="course-photo">
+          <img src="{photo}" alt="{label} training — {title}" loading="lazy" width="1600" height="900">
+        </figure>
+
         <h2>What this course is about</h2>
         <p>{about}</p>
 
@@ -319,9 +324,7 @@ COURSE_PAGE = """<!DOCTYPE html>
         </ul>
 
         <h2>Course fees and funding</h2>
-        <p>The course fee is <b>{fee_str} per participant</b>, covering all training
-           materials and the certificate of attendance. Al Mubin Food Corner Pte. Ltd.
-           is not GST-registered, so no GST is charged.</p>
+        <p>{fee_sentence}</p>
         <p><b>Funding validity period:</b> {funding_validity}</p>
 
         <h2>Facilities &amp; equipment used to conduct training</h2>
@@ -443,7 +446,16 @@ COURSE_PAGE = """<!DOCTYPE html>
 
 
 def fee_str(fee):
-    return f"S${fee:,}"
+    # Pro-bono courses carry fee=0 and must never render as "S$0".
+    return "Free (Pro-Bono)" if not fee else f"S${fee:,}"
+
+
+def course_photo(c, w=1600, q=75):
+    """Per-course image, falling back to the category photo."""
+    base = COURSE_PHOTO.get(c["slug"])
+    if not base:
+        return PHOTO[c["cat"]]
+    return f"{base}?auto=format&fit=crop&w={w}&q={q}"
 
 
 def modes_short(c):
@@ -470,7 +482,16 @@ def build_course(c):
         share_text=quote(c["title"], safe=""),
         review_url=GOOGLE_REVIEW_URL,
         duration=c["duration"], fee_str=fee_str(c["fee"]),
-        label=LABEL[c["cat"]], photo=PHOTO[c["cat"]],
+        fee_pill=("Free (Pro-Bono)" if not c["fee"]
+                  else f"{fee_str(c['fee'])} per participant"),
+        fee_sentence=(
+            "This course is delivered <b>pro-bono</b> — free of charge — including all "
+            "training materials and the certificate of attendance."
+            if not c["fee"] else
+            f"The course fee is <b>{fee_str(c['fee'])} per participant</b>, covering all "
+            "training materials and the certificate of attendance. Al Mubin Food Corner "
+            "Pte. Ltd. is not GST-registered, so no GST is charged."),
+        label=LABEL[c["cat"]], photo=course_photo(c),
         slug=c["slug"], hours=c["hours"], fee_num=c["fee"],
         seo_title=f'{c["title"]} ({c["code"]}) | Al Mubin FC Training',
         nav=NAV.format(root="../", cta="#enquire"),
@@ -525,16 +546,16 @@ INDEX = """<!DOCTYPE html>
       <div class="hero-photo hero-photo-1" style="background-image:url('{hero_main}')"></div>
       <div class="hero-photo hero-photo-2" style="background-image:url('{hero_inset}')"></div>
       <div class="hero-badge">
-        <b>17</b><span>course runs<br>delivered</span>
+        <b>{n_runs}</b><span>course runs<br>delivered</span>
       </div>
     </div>
   </div>
   <div class="wrap">
     <div class="stats">
-      <div class="stat"><span class="stat-ic">📚</span><b>3</b><span>Courses offered</span></div>
-      <div class="stat"><span class="stat-ic">🎓</span><b>17</b><span>Course runs delivered</span></div>
-      <div class="stat"><span class="stat-ic">⏱️</span><b>112</b><span>Training hours</span></div>
-      <div class="stat"><span class="stat-ic">📍</span><b>4</b><span>Partner venues</span></div>
+      <div class="stat"><span class="stat-ic">📚</span><b>{n_courses}</b><span>Courses offered</span></div>
+      <div class="stat"><span class="stat-ic">🎓</span><b>{n_runs}</b><span>Course runs delivered</span></div>
+      <div class="stat"><span class="stat-ic">⏱️</span><b>{n_hours}</b><span>Training hours</span></div>
+      <div class="stat"><span class="stat-ic">📍</span><b>{n_venues}</b><span>Partner venues</span></div>
     </div>
   </div>
 </header>
@@ -695,7 +716,7 @@ def build_index():
           </div>
         </div>
       </article>""".format(
-        photo=PHOTO[c["cat"]], label=LABEL[c["cat"]], code=c["code"],
+        photo=course_photo(c, w=800, q=70), label=LABEL[c["cat"]], code=c["code"],
         slug=c["slug"], title=E(c["title"]), lede=E(c["lede"]),
         modes_short=E(modes_short(c)), funding_validity=E(c["funding_validity"]),
         duration=c["duration"], fee=fee_str(c["fee"])) for c in COURSES)
@@ -705,7 +726,16 @@ def build_index():
         f"<td>{h} hrs</td><td>{E(a)} yrs</td></tr>"
         for i, (t, v, h, d, a, _c) in enumerate(PAST_RUNS, 1))
 
+    # Derived from the data so the headline figures cannot drift out of date
+    # when a course or a past run is added. Venues exclude the pro-bono
+    # food-court entry, which is a group of stalls rather than a single venue.
+    n_hours = sum(h for (_t, _v, h, _d, _a, _c) in PAST_RUNS)
+    n_venues = len({v for (_t, v, _h, _d, _a, _c) in PAST_RUNS
+                    if "Pro-Bono" not in v})
+
     return INDEX.format(jsonld=index_jsonld(),
+                        n_courses=len(COURSES), n_runs=len(PAST_RUNS),
+                        n_hours=n_hours, n_venues=n_venues,
                         nav=NAV.format(root="", cta="#courses"),
                         cards=cards, runs=runs, support=SUPPORT,
                         testimonials=TESTIMONIAL_SECTION,
