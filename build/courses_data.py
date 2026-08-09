@@ -31,6 +31,15 @@ CONTACT = {
     "address_l2": "Singapore 207668",
 }
 
+# Google review link shown on each course page.
+# TODO(client): replace with the Google Business Profile "write a review" deep link
+# once the profile's Place ID is known -- that form is
+#   https://search.google.com/local/writereview?placeid=<PLACE_ID>
+# and opens the review dialog directly. The search URL below is a stand-in that
+# lands on the business listing rather than the review box.
+GOOGLE_REVIEW_URL = ("https://www.google.com/search?q=Al+Mubin+Food+Corner"
+                     "+92+Syed+Alwi+Road+Singapore")
+
 # Quick-start messages offered in the WhatsApp widget. Each becomes a prefilled
 # wa.me message so the enquirer does not have to type one from scratch.
 WA_SUGGESTIONS = [

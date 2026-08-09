@@ -134,7 +134,11 @@ These need the client's confirmation before the site goes public:
 
 1. **Course fees** — S$280 / S$380 were set for the site, not taken from a client
    price list. Confirm, and confirm GST treatment.
-2. **SWDA disclosure fields** — `funding_validity`, `modes` and `facilities` in
+2. **Google review link** — `GOOGLE_REVIEW_URL` in `courses_data.py` currently points at
+   a Google *search* for the business, not the review box. Replace with the Business
+   Profile deep link `https://search.google.com/local/writereview?placeid=<PLACE_ID>`
+   once the Place ID is known, so the button opens the review dialog directly.
+3. **SWDA disclosure fields** — `funding_validity`, `modes` and `facilities` in
    `courses_data.py` are SAMPLE values written to satisfy the SWDA information-
    disclosure format. All must be replaced with the client's actual particulars.
    The funding validity periods in particular are placeholders: these are in-house
@@ -142,12 +146,12 @@ These need the client's confirmation before the site goes public:
    "not applicable". The disclosure list also requires the **names of senior
    management and trainers** and the **organisation structure**, which are not yet
    anywhere on the site.
-3. **Course codes** — `AMFC-WS01` / `AMFC-HL01` / `AMFC-KO01` were assigned here.
-4. **Testimonials** — written from the profile of the courses and venues on record.
+4. **Course codes** — `AMFC-WS01` / `AMFC-HL01` / `AMFC-KO01` were assigned here.
+5. **Testimonials** — written from the profile of the courses and venues on record.
    They are **not** verbatim learner quotes. Either replace them with real quotes from
    the post-course evaluation forms or remove the section; do not publish them as
    attributed testimonials without the client's sign-off.
-5. **FormSubmit activation** — see above.
-6. **DNS** — a stale `@ → 23.106.50.5` A record still points at the old host alongside
+6. **FormSubmit activation** — see above.
+7. **DNS** — a stale `@ → 23.106.50.5` A record still points at the old host alongside
    the correct `72.61.151.123`. Delete it, or the site will intermittently resolve to
    the wrong server and SSL issuance can fail.

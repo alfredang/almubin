@@ -4,7 +4,7 @@ import html, json, pathlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from courses_data import (COURSES, PAST_RUNS, CONTACT, PHOTO, LABEL, TESTIMONIALS,
-                          HERO_PHOTO, FLYER_PHOTO, WA_SUGGESTIONS)
+                          HERO_PHOTO, FLYER_PHOTO, WA_SUGGESTIONS, GOOGLE_REVIEW_URL)
 from urllib.parse import quote
 
 SITE = pathlib.Path(__file__).resolve().parent.parent
@@ -265,6 +265,29 @@ COURSE_PAGE = """<!DOCTYPE html>
     <div class="crumbs"><a href="../index.html">Home</a> › <a href="../index.html#courses">Courses</a> › {title}</div>
     <span class="eyebrow">{label} · {code}</span>
     <h1>{title}</h1>
+    <div class="share-row">
+      <span class="share-label">Share</span>
+      <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={share_url}"
+         target="_blank" rel="noopener" aria-label="Share on Facebook" title="Share on Facebook">
+        <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg>
+      </a>
+      <a class="share-btn" href="https://api.whatsapp.com/send?text={share_text}%20{share_url}"
+         target="_blank" rel="noopener" aria-label="Share on WhatsApp" title="Share on WhatsApp">
+        <svg viewBox="0 0 32 32" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8c1.9 1 4 1.6 6.2 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.1 1.1-3.9-.3-.4c-1.1-1.7-1.6-3.6-1.6-5.7C5.3 10.1 10.1 5.3 16 5.3S26.7 10.1 26.7 16 21.9 26.6 16 26.6zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.7 5.9 5.2.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.3-.3-.6-.4z"/></svg>
+      </a>
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={share_url}"
+         target="_blank" rel="noopener" aria-label="Share on LinkedIn" title="Share on LinkedIn">
+        <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M6.9 8H4v12h2.9V8zM5.4 3.5A1.7 1.7 0 1 0 5.4 7a1.7 1.7 0 0 0 0-3.5zM20 13.4c0-3-1.6-4.4-3.8-4.4-1.7 0-2.5.9-2.9 1.6V8H10.4c0 .8 0 12 0 12h2.9v-6.7c0-.4 0-.7.1-.9.3-.7.9-1.4 1.9-1.4 1.3 0 1.8 1 1.8 2.4V20H20v-6.6z"/></svg>
+      </a>
+      <a class="share-btn" href="mailto:?subject={share_text}&amp;body={share_url}"
+         aria-label="Share by email" title="Share by email">
+        <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 5-8-5V6l8 5 8-5v2.2z"/></svg>
+      </a>
+      <a class="review-btn" href="{review_url}" target="_blank" rel="noopener">
+        <span class="review-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        Review us on Google
+      </a>
+    </div>
     <p class="lede">{lede}</p>
     <div class="pill-row">
       <span class="pill pill-invert">📘 {code}</span>
@@ -443,6 +466,9 @@ def build_course(c):
         modes=modes, facilities=facilities,
         funding_validity=E(c["funding_validity"]),
         modes_short=E(modes_short(c)),
+        share_url=quote(f"https://almubinfctraining.com.sg/courses/{c['slug']}.html", safe=""),
+        share_text=quote(c["title"], safe=""),
+        review_url=GOOGLE_REVIEW_URL,
         duration=c["duration"], fee_str=fee_str(c["fee"]),
         label=LABEL[c["cat"]], photo=PHOTO[c["cat"]],
         slug=c["slug"], hours=c["hours"], fee_num=c["fee"],
