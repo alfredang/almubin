@@ -20,15 +20,17 @@
 # are not currently SSG-funded, so the correct disclosure may be "not applicable".
 
 CONTACT = {
-    "email": "support@almubin.com.sg",
+    "email": "admin@almubinfctraining.com.sg",
     "tel_display": "+65 9138 8967",
     "tel_href": "+6591388967",
     # Training team mobile. Digits only, country code first, no "+" -- wa.me link.
     "whatsapp": "6591388967",
     "manager": "Nabisah Begum Binte MD Ibrahim",
     "manager_title": "Training Manager",
-    "address_l1": "92 Syed Alwi Road",
-    "address_l2": "Singapore 207668",
+    "address_l1": "18 Sin Ming Lane #07-29",
+    "address_l2": "Midview City, Singapore 573960",
+    # Kept separate from address_l2 so the JSON-LD PostalAddress stays accurate.
+    "postal_code": "573960",
 }
 
 # Google review link shown on each course page.
@@ -38,7 +40,84 @@ CONTACT = {
 # and opens the review dialog directly. The search URL below is a stand-in that
 # lands on the business listing rather than the review box.
 GOOGLE_REVIEW_URL = ("https://www.google.com/search?q=Al+Mubin+Food+Corner"
-                     "+92+Syed+Alwi+Road+Singapore")
+                     "+18+Sin+Ming+Lane+Midview+City+Singapore")
+
+# Trainer profiles. Source: the trainer profile PDFs filed under
+#   course_application/ATO Supporting Document/5. SOP/
+# These also satisfy the SWDA disclosure requirement to publish the names of
+# the trainers. Do not embellish -- every claim below traces to those profiles.
+TRAINERS = [
+    {
+        "name": "Kasmani Bin Dollah",
+        "initials": "KD",
+        "title": "Adult Educator | Professional Trainer | Consultant",
+        "bio": [
+            "Kasmani Bin Dollah is an experienced adult educator, professional trainer and "
+            "consultant with nearly three decades of professional experience spanning training, "
+            "technology, workplace operations, leadership and professional development.",
+
+            "With an early career in the Singapore Police Force, Kasmani developed a strong "
+            "foundation in operational discipline, workplace and public safety, risk awareness, "
+            "accident prevention, incident management and adherence to established procedures. "
+            "These experiences have contributed to his practical approach when facilitating "
+            "workplace-based training.",
+
+            "Over the years, Kasmani has transitioned into adult education and professional "
+            "training, designing and delivering programmes for learners from diverse backgrounds. "
+            "His training experience covers workplace safety and accident prevention, operational "
+            "procedures and SOP awareness, Halal handling and internal Halal SOP practices, as "
+            "well as digital technology, AI, e-commerce and professional development.",
+
+            "As a trainer, Kasmani adopts a practical and learner-centred approach, using "
+            "workplace scenarios, real-world examples and interactive discussions to help adult "
+            "learners understand how concepts can be applied in their day-to-day work.",
+        ],
+        "expertise_label": "Areas of Training Expertise",
+        "expertise": [
+            "Workplace Safety &amp; Accident Prevention for the F&amp;B Industry",
+            "Halal Handling &amp; Internal Halal SOP",
+            "Digital Technology &amp; Workplace Productivity",
+            "AI &amp; Prompt Engineering",
+            "E-Commerce &amp; Digital Marketing",
+            "Leadership &amp; Professional Development",
+        ],
+    },
+    {
+        "name": "Koh Leong Sim (Sam Koh)",
+        "initials": "SK",
+        "title": "Adult Educator | WSQ Trainer | Learning &amp; Development Specialist",
+        "bio": [
+            "Koh Leong Sim (Sam Koh) is an experienced Adult Educator and Learning &amp; "
+            "Development Specialist with over 15 years of experience in training, curriculum "
+            "development and workforce capability building across public and private sector "
+            "organisations in Singapore.",
+
+            "An ACTA-certified trainer, Sam also holds a WSQ Diploma in Design and Development "
+            "of Learning for Performance (DDDLP), providing him with a strong foundation in adult "
+            "learning, competency-based training, curriculum development and assessment.",
+
+            "Sam has attained the WSQ competency Follow Food and Beverage Safety and Hygiene "
+            "Policies and Procedures, strengthening his knowledge of safety, hygiene and "
+            "operational procedures within the F&amp;B environment. His professional background "
+            "includes leadership and training roles with the Land Transport Authority, Ministry "
+            "of Manpower, People's Association and Institute of Technical Education.",
+
+            "Known for his practical and learner-centred facilitation style, Sam combines "
+            "real-world operational experience with structured adult-learning methodologies to "
+            "help learners translate knowledge into practical workplace application.",
+        ],
+        "expertise_label": "Relevant Training &amp; Professional Expertise",
+        "expertise": [
+            "Workplace Safety &amp; Accident Prevention for the F&amp;B Industry",
+            "Food &amp; Beverage Safety and Hygiene Policies &amp; Procedures",
+            "Workplace Safety, Compliance &amp; SOP Implementation",
+            "Crisis Management &amp; Business Continuity",
+            "Service Leadership &amp; Workplace Communication",
+            "Digital Transformation &amp; Artificial Intelligence",
+            "Curriculum Development &amp; WSQ Training",
+        ],
+    },
+]
 
 # Quick-start messages offered in the WhatsApp widget. Each becomes a prefilled
 # wa.me message so the enquirer does not have to type one from scratch.

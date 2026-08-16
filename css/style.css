@@ -690,3 +690,42 @@ footer .footer-top{padding-top:44px;padding-bottom:34px}
    clear of it instead of under it. Declared after the base rule above so it wins. */
 .powered-by a{color:#9fb3aa;text-decoration:none;font-weight:600}
 .powered-by a:hover{color:var(--amber);text-decoration:underline}
+
+/* ============================================================
+   TRAINERS — profile cards (source: SOP trainer profile PDFs)
+   Reuses the card ribbon, avatar and panel treatments already
+   in the system so the section does not read as a bolt-on.
+   ============================================================ */
+.trainers{background:linear-gradient(180deg,#fff 0%,var(--soft) 100%)}
+.trainer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:24px}
+.trainer-card{position:relative;overflow:hidden;background:#fff;
+  border:1px solid var(--line);border-radius:16px;padding:30px 28px 26px;
+  display:flex;flex-direction:column;box-shadow:0 4px 18px rgba(20,80,59,.05);
+  transition:.18s}
+.trainer-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;
+  background:var(--amber);z-index:2}
+.trainer-card:hover{box-shadow:0 10px 28px rgba(20,80,59,.10);transform:translateY(-2px)}
+.trainer-head{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.trainer-avatar{flex:none;width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand),var(--brand-dk));
+  color:#fff;font-weight:800;font-size:21px;letter-spacing:.02em;
+  display:flex;align-items:center;justify-content:center}
+.trainer-id h3{margin:0 0 4px;font-size:19px;line-height:1.25}
+.trainer-role{margin:0;font-size:13px;color:var(--muted);font-weight:600;line-height:1.45}
+.trainer-bio{flex:1}
+.trainer-bio p{font-size:14.8px;line-height:1.62;color:var(--ink);margin:0 0 13px}
+.trainer-exp{border-top:1px solid var(--line);padding-top:18px;margin-top:5px}
+.trainer-exp h4{margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--brand)}
+.trainer-exp ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.trainer-exp li{position:relative;padding-left:24px;font-size:14.2px;line-height:1.5;
+  color:var(--ink)}
+.trainer-exp li::before{content:"";position:absolute;left:0;top:7px;width:9px;height:9px;
+  border-radius:2px;background:var(--amber)}
+@media(max-width:820px){
+  .trainer-grid{grid-template-columns:1fr}
+  .trainer-card{padding:26px 20px 22px}
+  .trainer-head{gap:13px}
+  .trainer-avatar{width:52px;height:52px;font-size:18px}
+  .trainer-id h3{font-size:17.5px}
+}

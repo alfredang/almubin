@@ -5,7 +5,7 @@ import html, json, pathlib, sys
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from courses_data import (COURSES, PAST_RUNS, CONTACT, PHOTO, LABEL, TESTIMONIALS,
                           HERO_PHOTO, FLYER_PHOTO, WA_SUGGESTIONS, GOOGLE_REVIEW_URL,
-                          COURSE_PHOTO)
+                          COURSE_PHOTO, TRAINERS)
 from urllib.parse import quote
 
 SITE = pathlib.Path(__file__).resolve().parent.parent
@@ -17,6 +17,7 @@ NAV = """<nav>
     <ul class="nav-links">
       <li><a href="{root}index.html#courses">Courses</a></li>
       <li><a href="{root}index.html#why">Why Us</a></li>
+      <li><a href="{root}index.html#trainers">Trainers</a></li>
       <li><a href="{root}index.html#testimonials">Reviews</a></li>
       <li><a href="{root}index.html#contact">Contact</a></li>
     </ul>
@@ -153,6 +154,7 @@ def footer(root=""):
       <h4>Company</h4>
       <ul>
         <li><a href="{root}index.html#why">Why train with us</a></li>
+        <li><a href="{root}index.html#trainers">Our trainers</a></li>
         <li><a href="{root}index.html#testimonials">Testimonials</a></li>
         <li><a href="{root}index.html#guide">Free safety checklist</a></li>
         <li><a href="{root}index.html#contact">Contact us</a></li>
@@ -231,6 +233,44 @@ TESTIMONIAL_SECTION = """<section id="testimonials" class="testimonials">
       </figure>""".format(q=E(t["quote"]), name=E(t["name"]), role=E(t["role"]),
                           course=E(t["course"]), initial=E(t["role"][0]))
                     for t in TESTIMONIALS))
+
+# Trainer profiles. The strings in TRAINERS already carry HTML entities
+# (&amp;), so they are inserted as-is rather than through E().
+TRAINER_SECTION = """<section id="trainers" class="trainers">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow-sm">Our team</span>
+      <h2>Meet our trainers</h2>
+      <p>Every course is delivered by an experienced adult educator with hands-on
+         operational background in safety, compliance and F&amp;B practice.</p>
+    </div>
+    <div class="trainer-grid">
+{cards}
+    </div>
+  </div>
+</section>""".format(cards="\n".join("""      <article class="trainer-card">
+        <div class="trainer-head">
+          <div class="trainer-avatar">{initials}</div>
+          <div class="trainer-id">
+            <h3>{name}</h3>
+            <p class="trainer-role">{title}</p>
+          </div>
+        </div>
+        <div class="trainer-bio">
+{bio}
+        </div>
+        <div class="trainer-exp">
+          <h4>{expertise_label}</h4>
+          <ul>
+{expertise}
+          </ul>
+        </div>
+      </article>""".format(
+        initials=t["initials"], name=t["name"], title=t["title"],
+        expertise_label=t["expertise_label"],
+        bio="\n".join(f"          <p>{p}</p>" for p in t["bio"]),
+        expertise="\n".join(f"            <li>{x}</li>" for x in t["expertise"]))
+                    for t in TRAINERS))
 
 COURSE_PAGE = """<!DOCTYPE html>
 <html lang="en">
@@ -585,6 +625,8 @@ INDEX = """<!DOCTYPE html>
   </div>
 </section>
 
+{trainers}
+
 {testimonials}
 
 <section id="guide" class="lead-magnet">
@@ -684,7 +726,8 @@ def index_jsonld():
        "telephone":CONTACT["tel_display"],
        "areaServed":{"@type":"Country","name":"Singapore"},
        "address":{"@type":"PostalAddress","streetAddress":CONTACT["address_l1"],
-                  "addressLocality":"Singapore","postalCode":"207668","addressCountry":"SG"},
+                  "addressLocality":"Singapore","postalCode":CONTACT["postal_code"],
+                  "addressCountry":"SG"},
        "description":"On-site halal handling, workplace safety and kitchen operations training for F&B teams in Singapore."},
       {"@type":"WebSite","@id":f"{site}/#website","url":f"{site}/",
        "name":"Al Mubin FC Training","publisher":{"@id":f"{site}/#org"},"inLanguage":"en-SG"}]}
@@ -735,6 +778,7 @@ def build_index():
                         n_hours=n_hours, n_venues=n_venues,
                         nav=NAV.format(root="", cta="#courses"),
                         cards=cards, runs=runs, support=SUPPORT,
+                        trainers=TRAINER_SECTION,
                         testimonials=TESTIMONIAL_SECTION,
                         hero_main=HERO_PHOTO["main"], hero_inset=HERO_PHOTO["inset"],
                         flyer_photo=FLYER_PHOTO,
