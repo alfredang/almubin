@@ -17,7 +17,7 @@ NAV = """<nav>
     <ul class="nav-links">
       <li><a href="{root}index.html#courses">Courses</a></li>
       <li><a href="{root}index.html#why">Why Us</a></li>
-      <li><a href="{root}index.html#trainers">Trainers</a></li>
+      <li><a href="{root}trainers.html">Trainers</a></li>
       <li><a href="{root}index.html#testimonials">Reviews</a></li>
       <li><a href="{root}index.html#contact">Contact</a></li>
     </ul>
@@ -154,7 +154,7 @@ def footer(root=""):
       <h4>Company</h4>
       <ul>
         <li><a href="{root}index.html#why">Why train with us</a></li>
-        <li><a href="{root}index.html#trainers">Our trainers</a></li>
+        <li><a href="{root}trainers.html">Our trainers</a></li>
         <li><a href="{root}index.html#testimonials">Testimonials</a></li>
         <li><a href="{root}index.html#guide">Free safety checklist</a></li>
         <li><a href="{root}index.html#contact">Contact us</a></li>
@@ -236,6 +236,32 @@ TESTIMONIAL_SECTION = """<section id="testimonials" class="testimonials">
 
 # Trainer profiles. The strings in TRAINERS already carry HTML entities
 # (&amp;), so they are inserted as-is rather than through E().
+def trainer_cards(root=""):
+    """Name + short profile + areas of expertise, one card per trainer."""
+    return "\n".join("""      <article class="trainer-card">
+        <div class="trainer-head">
+          <div class="trainer-avatar">{initials}</div>
+          <div class="trainer-id">
+            <h3>{name}</h3>
+            <p class="trainer-role">{title}</p>
+          </div>
+        </div>
+        <div class="trainer-bio">
+          <p>{summary}</p>
+        </div>
+        <div class="trainer-exp">
+          <h4>{expertise_label}</h4>
+          <ul>
+{expertise}
+          </ul>
+        </div>
+      </article>""".format(
+        initials=t["initials"], name=t["name"], title=t["title"],
+        summary=t["summary"], expertise_label=t["expertise_label"],
+        expertise="\n".join(f"            <li>{x}</li>" for x in t["expertise"]))
+                     for t in TRAINERS)
+
+
 TRAINER_SECTION = """<section id="trainers" class="trainers">
   <div class="wrap">
     <div class="sec-head">
@@ -247,30 +273,88 @@ TRAINER_SECTION = """<section id="trainers" class="trainers">
     <div class="trainer-grid">
 {cards}
     </div>
+    <div class="trainers-cta">
+      <a class="btn btn-ghost" href="trainers.html">See our trainers &rarr;</a>
+    </div>
   </div>
-</section>""".format(cards="\n".join("""      <article class="trainer-card">
-        <div class="trainer-head">
-          <div class="trainer-avatar">{initials}</div>
-          <div class="trainer-id">
-            <h3>{name}</h3>
-            <p class="trainer-role">{title}</p>
-          </div>
-        </div>
-        <div class="trainer-bio">
-{bio}
-        </div>
-        <div class="trainer-exp">
-          <h4>{expertise_label}</h4>
-          <ul>
-{expertise}
-          </ul>
-        </div>
-      </article>""".format(
-        initials=t["initials"], name=t["name"], title=t["title"],
-        expertise_label=t["expertise_label"],
-        bio="\n".join(f"          <p>{p}</p>" for p in t["bio"]),
-        expertise="\n".join(f"            <li>{x}</li>" for x in t["expertise"]))
-                    for t in TRAINERS))
+</section>""".format(cards=trainer_cards())
+
+
+TRAINERS_PAGE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Our Trainers | Al Mubin FC Training</title>
+<meta name="description" content="The trainers who deliver Al Mubin FC Training's food safety, halal handling, workplace safety and kitchen operations courses.">
+<link rel="canonical" href="https://almubinfctraining.com.sg/trainers.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#063642">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Al Mubin FC Training">
+<meta property="og:title" content="Our Trainers | Al Mubin FC Training">
+<meta property="og:description" content="The trainers who deliver Al Mubin FC Training's food safety, halal handling, workplace safety and kitchen operations courses.">
+<meta property="og:url" content="https://almubinfctraining.com.sg/trainers.html">
+<meta property="og:locale" content="en_SG">
+<link rel="stylesheet" href="css/style.css">
+{jsonld}
+</head>
+<body>
+
+{nav}
+
+<header class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a> &rsaquo; Our trainers</div>
+    <span class="eyebrow">Our team</span>
+    <h1>Our trainers</h1>
+    <p class="page-hero-lede">Every course is delivered by an experienced adult educator with
+       hands-on operational background in safety, compliance and F&amp;B practice. Trainer
+       records, including certificates and curricula vitae, are maintained by the Training
+       Manager and are available on request.</p>
+  </div>
+</header>
+
+<section class="trainers trainers-page">
+  <div class="wrap">
+    <div class="trainer-grid">
+{cards}
+    </div>
+    <div class="trainers-cta">
+      <p>Want one of our trainers at your outlet?</p>
+      <a class="btn" href="index.html#courses">Browse our courses</a>
+      <a class="btn btn-ghost" href="index.html#contact">Talk to us</a>
+    </div>
+  </div>
+</section>
+
+{footer}
+
+<script src="js/enquiry.js"></script>
+</body>
+</html>
+"""
+
+
+def trainers_jsonld():
+    site = "https://almubinfctraining.com.sg"
+    people = [{"@type": "Person", "name": t["name"], "jobTitle": "Trainer",
+               "description": html.unescape(t["summary"]),
+               "worksFor": {"@type": "Organization", "name": "Al Mubin FC Training",
+                            "url": f"{site}/"}}
+              for t in TRAINERS]
+    data = {"@context": "https://schema.org", "@type": "ProfilePage",
+            "name": "Our Trainers", "url": f"{site}/trainers.html",
+            "mainEntity": people}
+    return ('<script type="application/ld+json">\n'
+            + json.dumps(data, ensure_ascii=False, indent=1) + '\n</script>')
+
+
+def build_trainers():
+    return TRAINERS_PAGE.format(
+        jsonld=trainers_jsonld(),
+        nav=NAV.format(root="", cta="index.html#courses"),
+        cards=trainer_cards(), footer=footer(""))
 
 COURSE_PAGE = """<!DOCTYPE html>
 <html lang="en">
@@ -800,4 +884,7 @@ for c in COURSES:
 
 (SITE / "index.html").write_text(build_index(), encoding="utf-8")
 print("wrote index.html")
+
+(SITE / "trainers.html").write_text(build_trainers(), encoding="utf-8")
+print("wrote trainers.html")
 print("done:", len(COURSES), "courses,", len(PAST_RUNS), "runs")

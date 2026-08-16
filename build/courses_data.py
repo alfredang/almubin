@@ -51,6 +51,16 @@ TRAINERS = [
         "name": "Kasmani Bin Dollah",
         "initials": "KD",
         "title": "Adult Educator | Professional Trainer | Consultant",
+        # Short profile -- the version shown on the site. The longer "bio"
+        # below is retained as the source record behind it.
+        "summary": (
+            "An adult educator and professional trainer with nearly three decades of "
+            "experience across training, workplace operations and professional "
+            "development. An early career in the Singapore Police Force gave him a "
+            "strong grounding in operational discipline, workplace safety, risk "
+            "awareness and accident prevention — which he brings to workplace-based "
+            "training through real scenarios and hands-on discussion."
+        ),
         "bio": [
             "Kasmani Bin Dollah is an experienced adult educator, professional trainer and "
             "consultant with nearly three decades of professional experience spanning training, "
@@ -86,6 +96,14 @@ TRAINERS = [
         "name": "Koh Leong Sim (Sam Koh)",
         "initials": "SK",
         "title": "Adult Educator | WSQ Trainer | Learning &amp; Development Specialist",
+        "summary": (
+            "An ACTA-certified adult educator with over 15 years in training, curriculum "
+            "development and workforce capability building. He holds a WSQ Diploma in "
+            "Design and Development of Learning for Performance and the WSQ competency "
+            "in Food and Beverage Safety and Hygiene, and has held training roles with "
+            "the Land Transport Authority, Ministry of Manpower, People's Association "
+            "and the Institute of Technical Education."
+        ),
         "bio": [
             "Koh Leong Sim (Sam Koh) is an experienced Adult Educator and Learning &amp; "
             "Development Specialist with over 15 years of experience in training, curriculum "

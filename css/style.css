@@ -729,3 +729,22 @@ footer .footer-top{padding-top:44px;padding-bottom:34px}
   .trainer-avatar{width:52px;height:52px;font-size:18px}
   .trainer-id h3{font-size:17.5px}
 }
+
+/* ============================================================
+   TRAINERS PAGE — standalone /trainers.html
+   ============================================================ */
+.page-hero{position:relative;padding:72px 0 56px;overflow:hidden;color:#fff;
+  background:linear-gradient(135deg,var(--brand-dk),var(--brand))}
+.page-hero .wrap{position:relative;z-index:1}
+.page-hero .eyebrow{background:rgba(255,255,255,.14);
+  border-color:rgba(255,255,255,.35);color:#fff}
+.page-hero h1{font-size:clamp(28px,4.6vw,44px);font-weight:800;margin:0}
+.page-hero-lede{font-size:17px;opacity:.93;max-width:70ch;margin:16px 0 0;line-height:1.6}
+.trainers-page{padding:52px 0 64px}
+.trainers-cta{margin-top:34px;text-align:center}
+.trainers-cta p{margin:0 0 16px;font-size:16.5px;color:var(--ink);font-weight:600}
+.trainers-cta .btn{margin:0 6px}
+@media(max-width:820px){
+  .page-hero{padding:52px 0 42px}
+  .trainers-cta .btn{display:block;margin:10px auto;max-width:280px}
+}
